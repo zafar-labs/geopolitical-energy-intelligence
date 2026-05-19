@@ -1,0 +1,12 @@
+project_name: "Hormuz-Macro-Risk-Pipeline"
+version: "1.0.0"
+
+sensors:
+  commodities:
+    brent_crude: "BZ=F"
+    jkm_lng: "JKM=F"
+
+risk_keywords:
+  - "Strait of Hormuz"
+  - "blockade"
+  - "insurance premium"
