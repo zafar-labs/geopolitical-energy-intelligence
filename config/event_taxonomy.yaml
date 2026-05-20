@@ -1,0 +1,192 @@
+events:
+
+  - event_id: HORMUZ_TRANSIT_001
+
+    event_category: transit_disruption
+
+    trigger_event:
+      name: "Strait of Hormuz closure"
+      actor: "Iran"
+      trigger_type: "maritime chokepoint disruption"
+
+    dependency_type:
+      - "transit chokepoint dependency"
+      - "Gulf-origin fuel dependency"
+
+    primary_disruption:
+      affected_systems:
+        - "oil shipping"
+        - "LNG shipping"
+        - "maritime logistics"
+
+    impact_domains:
+
+      energy_security:
+        - "fuel import disruption"
+        - "LNG supply stress"
+        - "load shedding risk"
+
+      macroeconomic:
+        - "inflation pressure"
+        - "FX reserve stress"
+        - "higher import bill"
+
+      agriculture:
+        - "fertilizer cost increase"
+        - "food inflation risk"
+
+      trade_exports:
+        - "higher export insurance premiums"
+        - "shipping cost increase"
+
+      financial_markets:
+        - "stock market volatility"
+
+      logistics:
+        - "inland freight cost escalation"
+
+      industrial:
+        - "higher production costs"
+
+    global_effects:
+
+      immediate:
+        - "oil price spike"
+        - "LNG spot market surge"
+        - "war-risk insurance increase"
+        - "freight cost escalation"
+
+      progressive:
+        - "shipping delays"
+        - "global energy market volatility"
+        - "supply uncertainty"
+
+    pakistan_exposure:
+
+      strategic_dependency:
+        - "high dependence on Gulf-origin energy imports"
+
+      immediate_effects:
+        - "higher fuel import costs"
+        - "market panic"
+        - "currency pressure"
+
+      delayed_effects:
+        - "fuel shortages"
+        - "industrial slowdown"
+        - "electricity tariff pressure"
+
+    transmission_timeline:
+
+      market_reaction: "instant"
+      import_cost_pressure: "immediate"
+      physical_supply_stress: "delayed"
+      industrial_impact: "progressive"
+
+    persistence:
+      expected_duration: "medium_to_long"
+
+    mitigation_capacity:
+      - "strategic fuel reserves"
+      - "fuel rationing"
+      - "emergency LNG procurement"
+
+    severity: "very_high"
+
+    severity_drivers:
+
+      dependency_concentration: "extreme"
+      import_criticality: "critical"
+      substitutability: "low"
+      macroeconomic_exposure: "severe"
+      escalation_risk: "extreme"
+
+    escalation_potential: "severe"
+
+
+
+  - event_id: QATAR_LNG_001
+
+    event_category: supply_infrastructure_disruption
+
+    trigger_event:
+      name: "Qatar LNG terminal strike"
+      actor: "Iran"
+      trigger_type: "energy infrastructure attack"
+
+    dependency_type:
+      - "supplier concentration dependency"
+      - "LNG import dependency"
+
+    primary_disruption:
+      affected_systems:
+        - "LNG export infrastructure"
+        - "LNG processing capacity"
+
+    impact_domains:
+
+      energy_security:
+        - "gas shortages"
+        - "power generation stress"
+        - "load shedding"
+
+      macroeconomic:
+        - "higher LNG import costs"
+        - "inflationary pressure"
+
+      industrial:
+        - "industrial gas curtailment"
+        - "production slowdown"
+
+      financial_markets:
+        - "energy-sector uncertainty"
+
+    global_effects:
+
+      immediate:
+        - "LNG spot market increase"
+        - "regional supply panic"
+
+      progressive:
+        - "cargo delivery delays"
+        - "regional LNG shortages"
+
+    pakistan_exposure:
+
+      strategic_dependency:
+        - "high LNG dependence on Qatar"
+
+      immediate_effects:
+        - "spot LNG procurement pressure"
+        - "energy market uncertainty"
+
+      delayed_effects:
+        - "gas load management"
+        - "industrial disruption"
+        - "electricity shortages"
+
+    transmission_timeline:
+
+      market_reaction: "instant"
+      cargo_disruption: "short_term"
+      domestic_energy_stress: "progressive"
+
+    persistence:
+      expected_duration: "medium_term"
+
+    mitigation_capacity:
+      - "alternative LNG procurement"
+      - "fuel switching"
+      - "demand management"
+
+    severity: "high"
+
+    severity_drivers:
+
+      dependency_concentration: "high"
+      import_criticality: "high"
+      substitutability: "medium_low"
+      macroeconomic_exposure: "significant"
+      escalation_risk: "high"
+
+    escalation_potential: "high"

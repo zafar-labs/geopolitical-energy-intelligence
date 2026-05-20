@@ -9,23 +9,21 @@ class HormuzCommoditySensor:
         self.tickers = self.config["sensors"]["commodities"]
 
     def fetch_prices(self):
-    	payload = {}
+        payload = {}
 
-    	for name, ticker in self.tickers.items():
-        	try:
-            		ticker_data = yf.Ticker(ticker)
-            		df = ticker_data.history(period="2d")
+        for name, ticker in self.tickers.items():
+            try:
+                ticker_data = yf.Ticker(ticker)
+                df = ticker_data.history(period="2d")
 
-            		if not df.empty:
-                		payload[name] = round(float(df["Close"].iloc[-1]), 2)
-            		else:
-                		payload[name] = None
+                if not df.empty:
+                    payload[name] = None
 
-       		except Exception as e:
-           		print(f"[ERROR] Failed to fetch {name}: {e}")
-           		payload[name] = None
+            except Exception as e:
+                print(f"[ERROR] Failed to fetch {name}: {e}")
+                payload[name] = None
 
-    	return payload
+        return payload
 
 if __name__ == "__main__":
     sensor = HormuzCommoditySensor()
