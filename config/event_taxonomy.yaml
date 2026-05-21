@@ -9,6 +9,13 @@ events:
       actor: "Iran"
       trigger_type: "maritime chokepoint disruption"
 
+    detection_keywords:
+      - "Hormuz"
+      - "Strait of Hormuz"
+      - "tanker disruption"
+      - "naval blockade"
+      - "shipping threat"
+
     dependency_type:
       - "transit chokepoint dependency"
       - "Gulf-origin fuel dependency"
@@ -113,6 +120,12 @@ events:
       name: "Qatar LNG terminal strike"
       actor: "Iran"
       trigger_type: "energy infrastructure attack"
+      
+    detection_keywords:
+      - "Qatar LNG"
+      - "LNG terminal"
+      - "gas export disruption"
+      - "Qatargas"
 
     dependency_type:
       - "supplier concentration dependency"
