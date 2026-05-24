@@ -15,6 +15,7 @@ events:
       - "tanker disruption"
       - "naval blockade"
       - "shipping threat"
+      - "Iran" # added for better detection of Iran-related transit disruptions
 
     dependency_type:
       - "transit chokepoint dependency"
