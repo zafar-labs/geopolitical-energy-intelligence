@@ -12,27 +12,54 @@ class EventClassifier:
 
         headline_lower = headline.lower()
 
+        best_match = None
+
+        highest_score = 0
+
+        matched_keywords = []
+
+        keyword_weights = {
+            "high_confidence": 5,
+            "medium_confidence": 3,
+            "contextual": 1
+        }
+
         for event in self.taxonomy["events"]:
 
-            keywords = event.get("detection_keywords", [])
+            score = 0
 
-            for keyword in keywords:
+            current_matches = []
 
-                if keyword.lower() in headline_lower:
+            detection_keywords = event.get("detection_keywords", {})
 
-                    return {
-                        "matched_event": event["event_id"],
-                        "event_category": event["event_category"],
-                        "severity": event["severity"],
-                        "trigger_event": event["trigger_event"]["name"]
-                    }
+            for category, keywords in detection_keywords.items():
 
-        return {
-            "matched_event": None,
-            "event_category": None,
-            "severity": None,
-            "trigger_event": None
-        }
+                weight = keyword_weights.get(category, 0)
+
+                for keyword in keywords:
+
+                    if keyword.lower() in headline_lower:
+
+                        score += weight
+
+                        current_matches.append(keyword)
+
+            if score > highest_score:
+
+                highest_score = score
+
+                matched_keywords = current_matches
+
+                best_match = {
+                    "matched_event": event["event_id"],
+                    "event_category": event["event_category"],
+                    "severity": event["severity"],
+                    "trigger_event": event["trigger_event"]["name"],
+                    "relevance_score": score,
+                    "matched_keywords": matched_keywords
+                }
+
+        return best_match
 
 
 if __name__ == "__main__":

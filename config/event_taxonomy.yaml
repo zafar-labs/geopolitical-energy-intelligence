@@ -10,12 +10,24 @@ events:
       trigger_type: "maritime chokepoint disruption"
 
     detection_keywords:
-      - "Hormuz"
-      - "Strait of Hormuz"
-      - "tanker disruption"
-      - "naval blockade"
-      - "shipping threat"
-      - "Iran" # added for better detection of Iran-related transit disruptions
+        high_confidence:
+          - "Strait of Hormuz"
+          - "Hormuz closure"
+          - "Hormuz disruption"
+          - "shipping lane closure"
+        medium_confidence:
+          - "naval blockade"
+          - "shipping disruption"
+          - "tanker seizure"
+          - "maritime threat"
+        contextual:
+          - "oil tanker"
+          - "Gulf shipping"
+          - "maritime tensions"
+          - "war-risk insurance"
+          - "energy transit disruption"
+          - "shipping insurance premiums"
+          - "Iran" # added for better detection of Iran-related transit disruptions
 
     dependency_type:
       - "transit chokepoint dependency"
@@ -123,10 +135,18 @@ events:
       trigger_type: "energy infrastructure attack"
       
     detection_keywords:
-      - "Qatar LNG"
-      - "LNG terminal"
-      - "gas export disruption"
-      - "Qatargas"
+        high_confidence:
+          - "Qatar LNG"
+          - "LNG terminal strike"
+          - "gas export disruption"
+        medium_confidence:
+          - "LNG facility"
+          - "gas processing"
+          - "Qatargas"
+        contextual:
+          - "LNG shipment"
+          - "gas supply delays"
+          - "energy infrastructure"
 
     dependency_type:
       - "supplier concentration dependency"
