@@ -27,7 +27,7 @@ events:
           - "war-risk insurance"
           - "energy transit disruption"
           - "shipping insurance premiums"
-          - "Iran" # added for better detection of Iran-related transit disruptions
+         # - "Iran" # added for better detection of Iran-related transit disruptions
 
     dependency_type:
       - "transit chokepoint dependency"

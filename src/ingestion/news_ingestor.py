@@ -1,6 +1,8 @@
 import feedparser
 
 from src.analysis.event_classifier import EventClassifier
+from src.storage.event_store import EventStore
+
 
 
 class NewsIngestor:
@@ -10,6 +12,8 @@ class NewsIngestor:
         self.feed_url = "https://www.aljazeera.com/xml/rss/all.xml"
 
         self.classifier = EventClassifier()
+
+        self.store = EventStore()
 
     def fetch_headlines(self):
 
@@ -37,8 +41,8 @@ class NewsIngestor:
 
             result = self.classifier.classify_event(headline)
 
-            if result["matched_event"]:
-
+            if result:
+                self.store.save_event(headline, result)
                 classified_events.append({
                     "headline": headline,
                     "classification": result
