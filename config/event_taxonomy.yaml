@@ -18,13 +18,13 @@ events:
         medium_confidence:
           - "naval blockade"
           - "shipping disruption"
+          - "war-risk insurance"
           - "tanker seizure"
           - "maritime threat"
         contextual:
           - "oil tanker"
           - "Gulf shipping"
           - "maritime tensions"
-          - "war-risk insurance"
           - "energy transit disruption"
           - "shipping insurance premiums"
          # - "Iran" # added for better detection of Iran-related transit disruptions

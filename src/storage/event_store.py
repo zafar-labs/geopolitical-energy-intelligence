@@ -19,6 +19,8 @@ class EventStore:
             id INTEGER PRIMARY KEY AUTOINCREMENT,
 
             headline TEXT,
+            
+            source TEXT,
 
             matched_event TEXT,
 
@@ -48,21 +50,24 @@ class EventStore:
 
         return result is not None
 
-    def save_event(self, headline, classification):
+    def save_event(self, headline, source, classification):
 
         self.cursor.execute("""
         INSERT INTO events (
             headline,
+            source,
             matched_event,
             event_category,
             severity,
             relevance_score,
             matched_keywords
         )
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
 
             headline,
+
+            source,
 
             classification["matched_event"],
 

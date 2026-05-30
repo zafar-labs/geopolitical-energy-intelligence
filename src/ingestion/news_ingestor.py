@@ -11,6 +11,8 @@ class NewsIngestor:
 
         self.feed_url = "https://www.aljazeera.com/xml/rss/all.xml"
 
+        self.source_name = "Simulated News Source"  # Placeholder source name for testing
+
         self.classifier = EventClassifier()
 
         self.store = EventStore()
@@ -65,7 +67,7 @@ class NewsIngestor:
 
                     if not self.store.event_exists(headline):
 
-                        self.store.save_event(headline, result)
+                        self.store.save_event(headline, self.source_name, result)
 
                         classified_events.append({
                             "headline": headline,
