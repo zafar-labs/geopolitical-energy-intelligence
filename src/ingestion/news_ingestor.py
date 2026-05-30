@@ -15,19 +15,33 @@ class NewsIngestor:
 
         self.store = EventStore()
 
-    def fetch_headlines(self):
+    def fetch_headlines(self): # Simulated headline fetching for testing purposes
 
-        feed = feedparser.parse(self.feed_url)
+        simulated_headlines = [
+
+            "Iran threatens closure of Strait of Hormuz",
+
+            "War-risk insurance premiums surge in Gulf shipping routes",
+
+            "Qatar LNG exports disrupted after terminal strike",
+
+            "Oil tanker delays reported near Gulf transit corridor"
+        ]
+
+        return simulated_headlines
+
+   # def fetch_headlines(self): # Actual headline fetching from RSS feed
+     #   feed = feedparser.parse(self.feed_url)
         
         # print(feed.entries) # added for debugging to see the structure of feed.entries
 
-        headlines = []
+     #   headlines = []
 
-        for entry in feed.entries[:10]:
+    #    for entry in feed.entries[:10]:
 
-            headlines.append(entry.title)
+      #      headlines.append(entry.title)
 
-        return headlines
+     #   return headlines
 
     def process_headlines(self):
 
@@ -37,16 +51,38 @@ class NewsIngestor:
 
         for headline in headlines:
 
-            print(f"\nChecking headline: {headline}") # added for debugging to see which headline is being processed
+            print(f"\nChecking headline: {headline}")
 
             result = self.classifier.classify_event(headline)
 
             if result:
-                self.store.save_event(headline, result)
-                classified_events.append({
-                    "headline": headline,
-                    "classification": result
-                })
+
+                print(f"Relevance Score: {result['relevance_score']}")
+
+                print(f"Matched Keywords: {result['matched_keywords']}")
+
+                if result["relevance_score"] >= 3:
+
+                    if not self.store.event_exists(headline):
+
+                        self.store.save_event(headline, result)
+
+                        classified_events.append({
+                            "headline": headline,
+                            "classification": result
+                        })
+
+                    else:
+
+                        print("Duplicate event skipped.")
+
+                else:
+
+                    print("Event rejected due to low relevance.")
+
+            else:
+
+                print("No classification result for headline.")
 
         return classified_events
 

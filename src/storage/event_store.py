@@ -28,11 +28,25 @@ class EventStore:
 
             relevance_score INTEGER,
 
-            matched_keywords TEXT
+            matched_keywords TEXT,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
         """)
 
         self.connection.commit()
+
+    def event_exists(self, headline):
+
+        self.cursor.execute("""
+        SELECT 1
+        FROM events
+        WHERE headline = ?
+        """, (headline,))
+
+        result = self.cursor.fetchone()
+
+        return result is not None
 
     def save_event(self, headline, classification):
 
@@ -65,7 +79,32 @@ class EventStore:
 
         print(f"Saved event: {headline}")
 
+    def fetch_all_events(self):
+        self.cursor.execute("""
+        SELECT
+            id,
+            headline,
+            matched_event,
+            event_category,
+            severity,
+            relevance_score,
+            matched_keywords,
+            created_at
+        FROM events
+        ORDER BY id DESC
+        """)
+
+        events = self.cursor.fetchall()
+
+        return events
+
 
 if __name__ == "__main__":
 
     store = EventStore()
+
+    events = store.fetch_all_events()
+
+    for event in events:
+
+        print(event)
