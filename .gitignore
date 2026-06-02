@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 data/
 venv/
+notes/
 .DS_Store
 .vscode/
 notes.docx/

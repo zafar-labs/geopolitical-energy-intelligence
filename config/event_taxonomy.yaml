@@ -30,8 +30,8 @@ events:
          # - "Iran" # added for better detection of Iran-related transit disruptions
 
     dependency_type:
-      - "transit chokepoint dependency"
-      - "Gulf-origin fuel dependency"
+      - "Transit Chokepoint Dependency"
+      - "Gulf-origin Fuel Dependency"
 
     primary_disruption:
       affected_systems:
@@ -42,59 +42,59 @@ events:
     impact_domains:
 
       energy_security:
-        - "fuel import disruption"
-        - "LNG supply stress"
-        - "load shedding risk"
+        - "Fuel Import Disruption"
+        - "LNG Supply Stress"
+        - "Load Shedding Risk"
 
       macroeconomic:
-        - "inflation pressure"
-        - "FX reserve stress"
-        - "higher import bill"
+        - "Inflationary Pressure"
+        - "FX Reserve Stress"
+        - "Higher Import Bill"
 
       agriculture:
-        - "fertilizer cost increase"
-        - "food inflation risk"
+        - "Fertilizer Cost Increase"
+        - "Food Inflation Risk"
 
       trade_exports:
-        - "higher export insurance premiums"
-        - "shipping cost increase"
+        - "Higher Export Insurance Premiums"
+        - "Shipping Cost Increase"
 
       financial_markets:
-        - "stock market volatility"
+        - "Stock Market Volatility"
 
       logistics:
-        - "inland freight cost escalation"
+        - "Inland Freight Cost Escalation"
 
       industrial:
-        - "higher production costs"
+        - "Higher Production Costs"
 
     global_effects:
 
       immediate:
-        - "oil price spike"
-        - "LNG spot market surge"
-        - "war-risk insurance increase"
-        - "freight cost escalation"
+        - "Oil Price Spike"
+        - "LNG Spot Market Surge"
+        - "War Risk Insurance Increase"
+        - "Freight Cost Escalation"
 
       progressive:
-        - "shipping delays"
-        - "global energy market volatility"
-        - "supply uncertainty"
+        - "Shipping Delays"
+        - "Global Energy Market Volatility"
+        - "Supply Uncertainty"
 
     pakistan_exposure:
 
       strategic_dependency:
-        - "high dependence on Gulf-origin energy imports"
+        - "High Dependence on Gulf-Origin Energy Imports"
 
       immediate_effects:
-        - "higher fuel import costs"
-        - "market panic"
-        - "currency pressure"
+        - "Higher Fuel Import Costs"
+        - "Market Panic"
+        - "Currency Pressure"
 
       delayed_effects:
-        - "fuel shortages"
-        - "industrial slowdown"
-        - "electricity tariff pressure"
+        - "Fuel Shortages"
+        - "Industrial Slowdown"
+        - "Electricity Tariff Pressure"
 
     transmission_timeline:
 
@@ -107,9 +107,9 @@ events:
       expected_duration: "medium_to_long"
 
     mitigation_capacity:
-      - "strategic fuel reserves"
-      - "fuel rationing"
-      - "emergency LNG procurement"
+      - "strategic Fuel Reserves"
+      - "Fuel Rationing"
+      - "Emergency LNG Procurement"
 
     severity: "very_high"
 
@@ -127,77 +127,77 @@ events:
 
   - event_id: QATAR_LNG_001
 
-    event_category: supply_infrastructure_disruption
+    event_category: Supply_Infrastructure_Disruption
 
     trigger_event:
-      name: "Qatar LNG terminal strike"
+      name: "Qatar LNG Terminal Strike"
       actor: "Iran"
-      trigger_type: "energy infrastructure attack"
+      trigger_type: "Energy Infrastructure Attack"
       
     detection_keywords:
         high_confidence:
           - "Qatar LNG"
-          - "LNG terminal strike"
-          - "gas export disruption"
+          - "LNG Terminal Strike"
+          - "Gas Export Disruption"
         medium_confidence:
-          - "LNG facility"
-          - "gas processing"
+          - "LNG Facility"
+          - "Gas Processing"
           - "Qatargas"
         contextual:
           - "LNG shipment"
-          - "gas supply delays"
-          - "energy infrastructure"
+          - "Gas Supply Delays"
+          - "Energy Infrastructure"
 
     dependency_type:
-      - "supplier concentration dependency"
-      - "LNG import dependency"
+      - "Supplier Concentration Dependency"
+      - "LNG Import Dependency"
 
     primary_disruption:
       affected_systems:
-        - "LNG export infrastructure"
-        - "LNG processing capacity"
+        - "LNG Export Infrastructure"
+        - "LNG Processing Capacity"
 
     impact_domains:
 
       energy_security:
-        - "gas shortages"
-        - "power generation stress"
-        - "load shedding"
+        - "Gas shortages"
+        - "Power Generation Stress"
+        - "Load Shedding Risk"
 
       macroeconomic:
-        - "higher LNG import costs"
-        - "inflationary pressure"
+        - "Higher LNG import costs"
+        - "Inflationary Pressure"
 
       industrial:
-        - "industrial gas curtailment"
-        - "production slowdown"
+        - "Industrial Gas Curtailment"
+        - "Production Slowdown"
 
       financial_markets:
-        - "energy-sector uncertainty"
+        - "Energy Sector Uncertainty"
 
     global_effects:
 
       immediate:
-        - "LNG spot market increase"
-        - "regional supply panic"
+        - "LNG Spot Market Increase"
+        - "Regional Supply Panic"
 
       progressive:
-        - "cargo delivery delays"
-        - "regional LNG shortages"
+        - "cargo Delivery Delays"
+        - "Reginal LNG shortages"
 
     pakistan_exposure:
 
       strategic_dependency:
-        - "high LNG dependence on Qatar"
+        - "High LNG Dependence on Qatar"
 
       immediate_effects:
-        - "spot LNG procurement pressure"
-        - "energy market uncertainty"
+        - "Spot LNG Procurement Pressure"
+        - "Energy Market Uncertainty"
 
       delayed_effects:
-        - "gas load management"
-        - "industrial disruption"
-        - "electricity shortages"
+        - "Gas Load Management"
+        - "Industrial Disruption"
+        - "Electricity Shortages"
 
     transmission_timeline:
 
@@ -209,9 +209,9 @@ events:
       expected_duration: "medium_term"
 
     mitigation_capacity:
-      - "alternative LNG procurement"
-      - "fuel switching"
-      - "demand management"
+      - "Alternative LNG Procurement"
+      - "Fuel Switching"
+      - "Demand Management"
 
     severity: "high"
 

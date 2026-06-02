@@ -56,7 +56,8 @@ class EventClassifier:
                     "severity": event["severity"],
                     "trigger_event": event["trigger_event"]["name"],
                     "relevance_score": score,
-                    "matched_keywords": matched_keywords
+                    "matched_keywords": matched_keywords,
+                    "impact_domains": event.get("impact_domains", {})
                 }
 
         return best_match
