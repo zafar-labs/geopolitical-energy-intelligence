@@ -96,6 +96,23 @@ events:
         - "Industrial Slowdown"
         - "Electricity Tariff Pressure"
 
+    cascade_effects:
+
+      first_order:
+        - "Oil Price Spike"
+        - "LNG Spot Market Surge"
+        - "War Risk Insurance Increase"
+
+      second_order:
+        - "Higher Fuel Import Costs"
+        - "Shipping Cost Increase"
+        - "FX Reserve Stress"
+
+      third_order:
+        - "Inflationary Pressure"
+        - "Industrial Slowdown"
+        - "Food Inflation Risk"
+
     transmission_timeline:
 
       market_reaction: "instant"
@@ -198,6 +215,22 @@ events:
         - "Gas Load Management"
         - "Industrial Disruption"
         - "Electricity Shortages"
+
+    cascade_effects:
+
+      first_order:
+        - "LNG Spot Market Increase"
+        - "Regional Supply Panic"
+
+      second_order:
+        - "Spot LNG Procurement Pressure"
+        - "Higher LNG Import Costs"
+        - "Gas Load Management"
+
+      third_order:
+        - "Industrial Disruption"
+        - "Electricity Shortages"
+        - "Production Slowdown"
 
     transmission_timeline:
 

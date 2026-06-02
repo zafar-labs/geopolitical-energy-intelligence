@@ -67,6 +67,12 @@ def generate_report():
 
     delayed_effects = set()
 
+    first_order_effects = set()
+
+    second_order_effects = set()
+
+    third_order_effects = set()
+
     if events:
         # compute highest score from events (index 6 expected to be score)
         try:
@@ -99,6 +105,30 @@ def generate_report():
                     "pakistan_exposure",
                     {}
                 )
+
+                cascade_effects = ontology_event.get(
+                    "cascade_effects",
+                    {}
+                )
+
+                for item in cascade_effects.get(
+                    "first_order",
+                    []
+                ):
+                    first_order_effects.add(item)
+
+                for item in cascade_effects.get(
+                    "second_order",
+                    []
+                ):
+                    second_order_effects.add(item)
+
+                for item in cascade_effects.get(
+                    "third_order",
+                    []
+                ):
+                    third_order_effects.add(item)  
+
                 event_score = event[6]
 
                 for item in pakistan_exposure.get(
@@ -199,8 +229,8 @@ def generate_report():
 
     print("\n=================================")
     print("PAKISTAN EXPOSURE ASSESSMENT")
-    print("=================================\n")
-
+    print("\n=================================")
+    
     print("Strategic Dependencies:")
 
     for item in sorted(strategic_dependencies):
@@ -217,6 +247,28 @@ def generate_report():
     for item in sorted(delayed_effects):
 
         print(f"- {item}")
+    print("=================================\n")
+
+    print("CASCADING RISK ASSESSMENT")
+    print("=================================\n")
+
+    print("First-Order Effects:")
+
+    for item in sorted(first_order_effects):
+        print(f"- {item}")
+
+    print("\nSecond-Order Effects:")
+
+    for item in sorted(second_order_effects):
+        print(f"- {item}")
+
+    print("\nThird-Order Effects:")  
+    for item in sorted(third_order_effects):
+        print(f"- {item}")
+    print("=================================\n")
+
+    
+
 
 if __name__ == "__main__":
     generate_report()
