@@ -59,6 +59,8 @@ def generate_report():
 
     domain_scores = {}
 
+    risk_clusters = {}
+
     high_risk_domains = 0
 
     strategic_dependencies = set()
@@ -101,6 +103,7 @@ def generate_report():
         for ontology_event in taxonomy:
             if ontology_event["event_id"] == event_code:
                 impact_domains = ontology_event.get("impact_domains", {})
+                crisis_cluster = ontology_event.get("crisis_cluster",{} )# Not used in current report but can be included in future iterations
                 pakistan_exposure = ontology_event.get(
                     "pakistan_exposure",
                     {}
@@ -130,6 +133,25 @@ def generate_report():
                     third_order_effects.add(item)  
 
                 event_score = event[6]
+
+                cluster_name = crisis_cluster.get(
+                    "cluster_name"
+                )
+
+                if cluster_name:
+
+                    if cluster_name not in risk_clusters:
+
+                        risk_clusters[cluster_name] = {
+                            "events": [],
+                            "score": 0
+                        }
+
+                    risk_clusters[cluster_name]["events"].append(
+                        ontology_event["trigger_event"]["name"]
+                    )
+
+                    risk_clusters[cluster_name]["score"] += event_score
 
                 for item in pakistan_exposure.get(
                     "strategic_dependency",
@@ -201,6 +223,36 @@ def generate_report():
     print("Composite Risk Assessment:")
     print(f"Risk Level: {composite_risk_level}")
     print(f"Composite Score: {composite_score}\n")
+
+    print("=================================")
+    print("CORRELATED RISK CLUSTERS")
+    print("=================================\n")
+
+    for cluster_name, cluster_data in risk_clusters.items():
+
+        cluster_risk = calculate_risk_level(
+            cluster_data["score"]
+        )
+
+        print(f"Cluster: {cluster_name}")
+
+        print(
+            f"Combined Score: "
+            f"{cluster_data['score']}"
+        )
+
+        print(
+            f"Risk Level: "
+            f"{cluster_risk}"
+        )
+
+        print("Events:")
+
+        for event_name in cluster_data["events"]:
+
+            print(f"- {event_name}")
+
+        print()
 
     print("=================================")
     print("DOMAIN RISK ASSESSMENT")

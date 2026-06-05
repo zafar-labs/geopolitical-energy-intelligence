@@ -2,6 +2,10 @@ events:
 
   - event_id: HORMUZ_TRANSIT_001
 
+    crisis_cluster:
+      cluster_id: GULF_ENERGY_SHOCK
+      cluster_name: Gulf Energy Supply Shock
+
     event_category: transit_disruption
 
     trigger_event:
@@ -143,14 +147,14 @@ events:
 
 
   - event_id: QATAR_LNG_001
-
+    crisis_cluster:
+      cluster_id: GULF_ENERGY_SHOCK
+      cluster_name: Gulf Energy Supply Shock
     event_category: Supply_Infrastructure_Disruption
-
     trigger_event:
       name: "Qatar LNG Terminal Strike"
       actor: "Iran"
       trigger_type: "Energy Infrastructure Attack"
-      
     detection_keywords:
         high_confidence:
           - "Qatar LNG"
