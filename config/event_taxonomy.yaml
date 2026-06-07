@@ -100,6 +100,17 @@ events:
         - "Industrial Slowdown"
         - "Electricity Tariff Pressure"
 
+    commodity_exposure:
+
+      crude_oil:
+        exposure_level: "high"
+
+      lng:
+        exposure_level: "high"
+
+      refined_fuels:
+        exposure_level: "high"
+
     cascade_effects:
 
       first_order:
@@ -219,6 +230,17 @@ events:
         - "Gas Load Management"
         - "Industrial Disruption"
         - "Electricity Shortages"
+
+    commodity_exposure:
+
+      lng:
+        exposure_level: "very_high"
+
+      power_generation:
+        exposure_level: "high"
+
+      industrial_gas:
+        exposure_level: "high"
 
     cascade_effects:
 

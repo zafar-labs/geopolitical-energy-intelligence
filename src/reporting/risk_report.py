@@ -1,6 +1,13 @@
 import yaml
 from src.storage.event_store import EventStore
 
+EXPOSURE_RANK = {
+    "low": 1,
+    "medium": 2,
+    "high": 3,
+    "very_high": 4
+}
+
 def load_taxonomy():
 
     with open("config/event_taxonomy.yaml", "r") as file:
@@ -61,6 +68,8 @@ def generate_report():
 
     risk_clusters = {}
 
+    commodity_exposures = {}
+
     high_risk_domains = 0
 
     strategic_dependencies = set()
@@ -114,6 +123,11 @@ def generate_report():
                     {}
                 )
 
+                commodity_exposure = ontology_event.get(
+                    "commodity_exposure",
+                    {}
+                )
+
                 for item in cascade_effects.get(
                     "first_order",
                     []
@@ -130,9 +144,28 @@ def generate_report():
                     "third_order",
                     []
                 ):
-                    third_order_effects.add(item)  
+                    third_order_effects.add(item)
 
                 event_score = event[6]
+
+                for commodity, details in commodity_exposure.items():
+                    exposure_level = details.get(
+                        "exposure_level",
+                        "unknown"
+                    )
+                    current_level = commodity_exposures.get(
+                        commodity
+                    )
+
+                    if current_level is None:
+                        commodity_exposures[commodity] = exposure_level
+                    else:
+                        if (
+                            EXPOSURE_RANK.get(exposure_level, 0)
+                            >
+                            EXPOSURE_RANK.get(current_level, 0)
+                        ):
+                            commodity_exposures[commodity] = exposure_level
 
                 cluster_name = crisis_cluster.get(
                     "cluster_name"
@@ -272,6 +305,21 @@ def generate_report():
         print(f"Score: {score}")
         print(f"Risk Level: {domain_risk}\n")
 
+    print("=================================")
+    print("COMMODITY EXPOSURE ASSESSMENT")
+    print("=================================\n")
+
+    for commodity, exposure in sorted(
+        commodity_exposures.items()
+    ):
+
+        print(
+            f"{commodity}: "
+            f"{exposure.upper()}"
+        )
+
+    print()
+    
     print("Potential Areas of Concern:")
     if impact_areas:
         for area in sorted(impact_areas):
