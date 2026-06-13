@@ -128,6 +128,20 @@ events:
         - "Industrial Slowdown"
         - "Food Inflation Risk"
 
+    escalation_indicators:
+
+      high_confidence:
+        - "Tanker Attack"
+        - "Naval Interdiction"
+        - "Mine Deployment"
+
+      medium_confidence:
+        - "War Risk Insurance Spike"
+        - "Military Mobilization"
+
+      monitoring:
+        - "Diplomatic Breakdown"
+
     transmission_timeline:
 
       market_reaction: "instant"
@@ -257,6 +271,19 @@ events:
         - "Industrial Disruption"
         - "Electricity Shortages"
         - "Production Slowdown"
+
+    escalation_indicators:
+
+      high_confidence:
+        - "Terminal Shutdown"
+        - "LNG Cargo Cancellation"
+
+      medium_confidence:
+        - "Spot LNG Price Spike"
+        - "Regional LNG Shortages"
+
+      monitoring:
+        - "Extended Repair Timeline"
 
     transmission_timeline:
 

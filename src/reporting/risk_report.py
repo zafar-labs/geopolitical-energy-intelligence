@@ -84,6 +84,12 @@ def generate_report():
 
     third_order_effects = set()
 
+    high_confidence_indicators = set()
+
+    medium_confidence_indicators = set()
+
+    monitoring_indicators = set()
+
     if events:
         # compute highest score from events (index 6 expected to be score)
         try:
@@ -123,6 +129,11 @@ def generate_report():
                     {}
                 )
 
+                escalation_indicators = ontology_event.get(
+                    "escalation_indicators",
+                    {}
+                )
+
                 commodity_exposure = ontology_event.get(
                     "commodity_exposure",
                     {}
@@ -147,6 +158,24 @@ def generate_report():
                     third_order_effects.add(item)
 
                 event_score = event[6]
+
+                for item in escalation_indicators.get(
+                    "high_confidence",
+                    []
+                ):
+                    high_confidence_indicators.add(item)
+
+                for item in escalation_indicators.get(
+                    "medium_confidence",
+                    []
+                ):
+                    medium_confidence_indicators.add(item)
+
+                for item in escalation_indicators.get(
+                    "monitoring",
+                    []
+                ):
+                    monitoring_indicators.add(item)
 
                 for commodity, details in commodity_exposure.items():
                     exposure_level = details.get(
@@ -365,6 +394,33 @@ def generate_report():
     print("\nThird-Order Effects:")  
     for item in sorted(third_order_effects):
         print(f"- {item}")
+    print("=================================\n")
+
+    print("=================================")
+    print("ESCALATION MONITORING")
+    print("=================================\n")
+
+    print("High-Confidence Indicators:")
+
+    for item in sorted(
+        high_confidence_indicators
+    ):
+        print(f"- {item}")
+
+    print("\nMedium-Confidence Indicators:")
+
+    for item in sorted(
+        medium_confidence_indicators
+    ):
+        print(f"- {item}")
+
+    print("\nMonitoring Indicators:")
+
+    for item in sorted(
+        monitoring_indicators
+    ):
+        print(f"- {item}")
+
     print("=================================\n")
 
     
