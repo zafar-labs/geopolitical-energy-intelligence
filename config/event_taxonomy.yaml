@@ -142,6 +142,17 @@ events:
       monitoring:
         - "Diplomatic Breakdown"
 
+    forecast_scenarios:
+
+      most_likely:
+        description: "Short-term shipping disruption and higher energy prices."
+
+      severe_case:
+        description: "Extended Hormuz closure causing major fuel import disruption and inflationary pressure."
+
+      best_case:
+        description: "Rapid diplomatic de-escalation with limited market impact."
+    
     transmission_timeline:
 
       market_reaction: "instant"
@@ -284,6 +295,18 @@ events:
 
       monitoring:
         - "Extended Repair Timeline"
+        
+
+    forecast_scenarios:
+
+      most_likely:
+        description: "Temporary LNG supply disruption requiring spot market procurement."
+
+      severe_case:
+        description: "Extended LNG export disruption causing gas shortages and power generation stress."
+
+      best_case:
+        description: "Rapid restoration of LNG export capacity."
 
     transmission_timeline:
 

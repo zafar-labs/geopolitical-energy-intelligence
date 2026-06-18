@@ -90,6 +90,8 @@ def generate_report():
 
     monitoring_indicators = set()
 
+    forecast_scenarios = {}
+
     if events:
         # compute highest score from events (index 6 expected to be score)
         try:
@@ -134,6 +136,11 @@ def generate_report():
                     {}
                 )
 
+                forecast_data = ontology_event.get(
+                    "forecast_scenarios",
+                    {}
+                )
+
                 commodity_exposure = ontology_event.get(
                     "commodity_exposure",
                     {}
@@ -158,6 +165,44 @@ def generate_report():
                     third_order_effects.add(item)
 
                 event_score = event[6]
+
+                if ontology_event["event_id"] not in forecast_scenarios:
+                    forecast_scenarios[
+                        ontology_event["event_id"]
+                    ] = {
+
+                        "event_name":
+                            ontology_event[
+                                "trigger_event"
+                            ]["name"],
+
+                        "most_likely":
+                            forecast_data.get(
+                                "most_likely",
+                                {}
+                            ).get(
+                                "description",
+                                "Not Available"
+                            ),
+
+                        "severe_case":
+                            forecast_data.get(
+                                "severe_case",
+                                {}
+                            ).get(
+                                "description",
+                                "Not Available"
+                            ),
+
+                        "best_case":
+                            forecast_data.get(
+                                "best_case",
+                                {}
+                            ).get(
+                                "description",
+                                "Not Available"
+                            )
+                    }
 
                 for item in escalation_indicators.get(
                     "high_confidence",
@@ -422,6 +467,43 @@ def generate_report():
         print(f"- {item}")
 
     print("=================================\n")
+
+    print("=================================")
+    print("FORECAST ASSESSMENT")
+    print("=================================\n")
+
+    for scenario in forecast_scenarios.values():
+
+        print(
+            f"Event: "
+            f"{scenario['event_name']}\n"
+        )
+
+        print(
+            "Most Likely Scenario:"
+        )
+
+        print(
+            f"- {scenario['most_likely']}\n"
+        )
+
+        print(
+            "Severe Scenario:"
+        )
+
+        print(
+            f"- {scenario['severe_case']}\n"
+        )
+
+        print(
+            "Best Case Scenario:"
+        )
+
+        print(
+            f"- {scenario['best_case']}\n"
+        )
+
+        print("---------------------------------\n")
 
     
 
