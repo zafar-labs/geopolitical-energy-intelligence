@@ -141,6 +141,11 @@ def generate_report():
                     {}
                 )
 
+                confidence_data = ontology_event.get(
+                    "scenario_confidence",
+                    {}
+                )
+
                 commodity_exposure = ontology_event.get(
                     "commodity_exposure",
                     {}
@@ -201,6 +206,24 @@ def generate_report():
                             ).get(
                                 "description",
                                 "Not Available"
+                            ),
+
+                        "most_likely_confidence":
+                            confidence_data.get(
+                                "most_likely",
+                                0
+                            ),
+
+                        "severe_case_confidence":
+                            confidence_data.get(
+                                "severe_case",
+                                0
+                            ),
+
+                        "best_case_confidence":
+                            confidence_data.get(
+                                "best_case",
+                                0
                             )
                     }
 
@@ -480,7 +503,8 @@ def generate_report():
         )
 
         print(
-            "Most Likely Scenario:"
+            f"Most Likely Scenario "
+            f"({scenario['most_likely_confidence']}%):"
         )
 
         print(
@@ -488,7 +512,8 @@ def generate_report():
         )
 
         print(
-            "Severe Scenario:"
+            f"Severe Scenario "
+            f"({scenario['severe_case_confidence']}%):"
         )
 
         print(
@@ -496,7 +521,8 @@ def generate_report():
         )
 
         print(
-            "Best Case Scenario:"
+            f"Best Case Scenario "
+            f"({scenario['best_case_confidence']}%):"
         )
 
         print(

@@ -152,6 +152,14 @@ events:
 
       best_case:
         description: "Rapid diplomatic de-escalation with limited market impact."
+
+    scenario_confidence:
+
+      most_likely: 70
+
+      severe_case: 20
+
+      best_case: 10
     
     transmission_timeline:
 
@@ -180,8 +188,7 @@ events:
 
     escalation_potential: "severe"
 
-
-
+   
   - event_id: QATAR_LNG_001
     crisis_cluster:
       cluster_id: GULF_ENERGY_SHOCK
@@ -308,6 +315,14 @@ events:
       best_case:
         description: "Rapid restoration of LNG export capacity."
 
+    scenario_confidence:
+
+      most_likely: 70
+
+      severe_case: 20
+
+      best_case: 10
+
     transmission_timeline:
 
       market_reaction: "instant"
@@ -333,3 +348,5 @@ events:
       escalation_risk: "high"
 
     escalation_potential: "high"
+
+   
