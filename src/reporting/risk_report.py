@@ -42,17 +42,43 @@ def calculate_composite_risk(
         + high_risk_domains
     )
 
-    if composite_score >= 14:
+    if composite_score >= 16:
+
         return "CRITICAL", composite_score
 
-    elif composite_score >= 10:
+    elif composite_score >= 12:
+
         return "HIGH", composite_score
 
-    elif composite_score >= 6:
+    elif composite_score >= 8:
+
         return "MEDIUM", composite_score
 
     else:
+
         return "LOW", composite_score
+
+
+def calculate_dynamic_confidence(
+    base_confidence,
+    composite_score,
+    high_indicator_count,
+    very_high_exposure_count
+):
+
+    confidence = base_confidence
+
+    confidence += composite_score
+
+    confidence += (
+        high_indicator_count * 2
+    )
+
+    confidence += (
+        very_high_exposure_count * 3
+    )
+
+    return min(confidence, 95)
 
 def generate_report():
 
@@ -495,7 +521,28 @@ def generate_report():
     print("FORECAST ASSESSMENT")
     print("=================================\n")
 
+    high_indicator_count = len(
+        high_confidence_indicators
+    )
+
+    very_high_exposure_count = sum(
+        1
+        for exposure in commodity_exposures.values()
+        if exposure == "very_high"
+    )
+
     for scenario in forecast_scenarios.values():
+
+        dynamic_confidence = (
+            calculate_dynamic_confidence(
+                scenario[
+                    'most_likely_confidence'
+                ],
+                composite_score,
+                high_indicator_count,
+                very_high_exposure_count
+            )
+        )
 
         print(
             f"Event: "
@@ -504,7 +551,7 @@ def generate_report():
 
         print(
             f"Most Likely Scenario "
-            f"({scenario['most_likely_confidence']}%):"
+            f"({dynamic_confidence}%):"
         )
 
         print(
@@ -530,7 +577,6 @@ def generate_report():
         )
 
         print("---------------------------------\n")
-
     
 
 
