@@ -28,6 +28,8 @@ class EventClassifier:
 
             score = 0
 
+            MINIMUM_RELEVANCE_SCORE = 5
+
             current_matches = []
 
             detection_keywords = event.get("detection_keywords", {})
@@ -60,7 +62,11 @@ class EventClassifier:
                     "impact_domains": event.get("impact_domains", {})
                 }
 
-        return best_match
+        if highest_score >= MINIMUM_RELEVANCE_SCORE:
+
+            return best_match
+
+        return None
 
 
 if __name__ == "__main__":

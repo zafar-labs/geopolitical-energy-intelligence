@@ -2,6 +2,14 @@ import feedparser
 
 from src.storage.event_store import EventStore
 
+DEBUG_MODE = False
+
+if DEBUG_MODE:
+
+    print("\nTEXT BEING CLASSIFIED:")
+    print(article_text)
+    print("-" * 80)
+
 RSS_FEEDS = [
 
     "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
@@ -92,6 +100,7 @@ if __name__ == "__main__":
             + article["summary"]
         )
 
+        
         classification = (
             classifier.classify_event(
                 article_text
@@ -109,9 +118,18 @@ if __name__ == "__main__":
             events_detected += 1
 
             print(
-                f"Detected Event: "
-                f"{classification['matched_event']}"
+                f"\nDetected Event: {classification['matched_event']}"
             )
+            print(
+                f"Score: {classification['relevance_score']}"
+            )
+            print(
+                f"Matched Keywords: {classification['matched_keywords']}"
+            )
+            print(
+                f"Headline: {article['title']}"
+            )
+
     print(
         f"Articles Found: {len(articles)}"
     )

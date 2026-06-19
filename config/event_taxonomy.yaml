@@ -15,10 +15,11 @@ events:
 
     detection_keywords:
         high_confidence:
-          - "Strait of Hormuz"
           - "Hormuz closure"
-          - "Hormuz disruption"
-          - "shipping lane closure"
+          - "close the Strait of Hormuz"
+          - "blockade Hormuz"
+          - "shipping through Hormuz suspended"
+          - "Hormuz transit disrupted"
         medium_confidence:
           - "naval blockade"
           - "shipping disruption"
@@ -27,6 +28,7 @@ events:
           - "maritime threat"
         contextual:
           - "oil tanker"
+          - "Strait of Hormuz"
           - "Gulf shipping"
           - "maritime tensions"
           - "energy transit disruption"
