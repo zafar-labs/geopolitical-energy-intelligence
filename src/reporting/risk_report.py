@@ -84,6 +84,8 @@ def generate_report():
 
     store = EventStore()
 
+    #print("TOTAL EVENTS:", store.count_events())# Demonstrate counting total events in the database
+
     taxonomy = load_taxonomy()
 
     events = store.fetch_high_relevance_events(5)

@@ -3,13 +3,26 @@ import sqlite3
 
 class EventStore:
 
-    def __init__(self, db_path="data/geopolitical_events.db"):
+    def __init__(self):
 
-        self.connection = sqlite3.connect(db_path)
+        self.connection = sqlite3.connect(
+            "data/geopolitical_events.db"
+        )
 
         self.cursor = self.connection.cursor()
 
         self.create_events_table()
+
+        self.create_articles_table()
+
+    def count_events(self):
+
+        self.cursor.execute("""
+        SELECT COUNT(*)
+        FROM events
+        """)
+
+        return self.cursor.fetchone()[0]
 
     def create_events_table(self):
 
@@ -38,6 +51,29 @@ class EventStore:
 
         self.connection.commit()
 
+    def create_articles_table(self):
+
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS articles (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            title TEXT,
+
+            source TEXT,
+
+            url TEXT UNIQUE,
+
+            published_at TEXT,
+
+            summary TEXT,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """)
+
+        self.connection.commit()
+
     def event_exists(self, headline):
         """
         Check whether an event headline has already been stored
@@ -53,6 +89,27 @@ class EventStore:
         result = self.cursor.fetchone()
 
         return result is not None
+    
+    def article_exists(self, url):
+
+        self.cursor.execute("""
+        SELECT 1
+        FROM articles
+        WHERE url = ?
+        """, (url,))
+
+        result = self.cursor.fetchone()
+
+        return result is not None
+    
+    def count_articles(self):
+
+        self.cursor.execute("""
+        SELECT COUNT(*)
+        FROM articles
+        """)
+
+        return self.cursor.fetchone()[0]
 
     def save_event(self, headline, source, classification):
 
@@ -87,6 +144,34 @@ class EventStore:
         self.connection.commit()
 
         print(f"Saved event: {headline}")
+
+    def save_article(
+        self,
+        title,
+        source,
+        url,
+        published_at,
+        summary
+    ):
+
+        self.cursor.execute("""
+        INSERT INTO articles (
+            title,
+            source,
+            url,
+            published_at,
+            summary
+        )
+        VALUES (?, ?, ?, ?, ?)
+        """, (
+            title,
+            source,
+            url,
+            published_at,
+            summary
+        ))
+
+        self.connection.commit()
 
     def fetch_all_events(self):
 
