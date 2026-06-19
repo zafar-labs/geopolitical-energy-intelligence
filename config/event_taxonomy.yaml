@@ -351,4 +351,48 @@ events:
 
     escalation_potential: "high"
 
+  - event_id: REGIONAL_ESCALATION_001
+    event_category: military_escalation
+    severity: high
+    trigger_event:
+      name: Regional Military Escalation
+
+    detection_keywords:
+      high_confidence:
+        - "missile strike"
+        - "airstrike"
+        - "military escalation"
+        - "cross-border attack"
+      medium_confidence:
+        - "military mobilization"
+        - "retaliatory strike"
+        - "armed conflict"
+      contextual:
+        - "Israel"
+        - "Iran"
+        - "Lebanon"
+        - "regional tensions"
+
+    impact_domains:
+
+      energy_security:
+        - Energy Market Uncertainty
+
+      macroeconomic:
+        - Regional Instability
+
+      financial_markets:
+        - Risk-Off Sentiment
+
+    pakistan_exposure:
+
+      strategic_dependency:
+        - Regional Stability
+
+      immediate_effects:
+        - Security Uncertainty
+
+      delayed_effects:
+        - Economic Uncertainty
+
    

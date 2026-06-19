@@ -65,6 +65,23 @@ class EventClassifier:
         if highest_score >= MINIMUM_RELEVANCE_SCORE:
 
             return best_match
+        if highest_score > 0:
+
+            print(
+                f"\nNEAR MISS:"
+            )
+
+            print(
+                f"Score: {highest_score}"
+            )
+
+            print(
+                f"Headline: {headline}"
+            )
+
+            print(
+                f"Keywords: {matched_keywords}"
+            )
 
         return None
 

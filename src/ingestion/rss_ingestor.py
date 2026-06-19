@@ -10,9 +10,12 @@ if DEBUG_MODE:
     print(article_text)
     print("-" * 80)
 
+near_misses = []
+
 RSS_FEEDS = [
 
-    "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+    "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+    "https://feeds.bbci.co.uk/news/world/rss.xml"
 ]
 
 
