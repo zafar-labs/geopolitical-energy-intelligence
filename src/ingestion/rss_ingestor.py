@@ -60,9 +60,15 @@ if __name__ == "__main__":
 
     store = EventStore()
 
+    from src.analysis.event_classifier import EventClassifier
+
+    classifier = EventClassifier()
+
     articles = fetch_articles()
 
     saved_count = 0
+
+    events_detected = 0
 
     for article in articles:
 
@@ -80,6 +86,32 @@ if __name__ == "__main__":
 
             saved_count += 1
 
+        article_text = (
+            article["title"]
+            + " "
+            + article["summary"]
+        )
+
+        classification = (
+            classifier.classify_event(
+                article_text
+            )
+        )
+
+        if classification:
+
+            store.save_event(
+                article["title"],
+                article["source"],
+                classification
+            )
+
+            events_detected += 1
+
+            print(
+                f"Detected Event: "
+                f"{classification['matched_event']}"
+            )
     print(
         f"Articles Found: {len(articles)}"
     )
@@ -87,6 +119,11 @@ if __name__ == "__main__":
     print(
         f"Articles Saved: {saved_count}"
     )
+
+    print(
+    f"Events Detected: "
+    f"{events_detected}"
+)
 
     print(
         f"Database Articles: "
