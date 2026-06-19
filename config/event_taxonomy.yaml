@@ -395,4 +395,75 @@ events:
       delayed_effects:
         - Economic Uncertainty
 
+  - event_id: DIPLOMATIC_BREAKTHROUGH_001
+
+    event_category: diplomatic_development
+
+    trigger_event:
+      name: "Diplomatic Breakthrough"
+      actor: "State Actors"
+      trigger_type: "negotiated settlement"
+
+    detection_keywords:
+
+        high_confidence:
+          - "peace agreement"
+          - "signed agreement"
+          - "memorandum of understanding"
+          - "ceasefire agreement"
+
+        medium_confidence:
+          - "nuclear talks"
+          - "diplomatic talks"
+          - "peace talks"
+          - "negotiations"
+
+        contextual:
+          - "Iran"
+          - "United States"
+          - "ceasefire"
+
+    impact_domains:
+
+      energy_security:
+        - "Energy Market Stability"
+
+      macroeconomic:
+        - "Reduced Uncertainty"
+
+      financial_markets:
+        - "Positive Market Sentiment"
+
+    pakistan_exposure:
+
+      strategic_dependency:
+        - "Regional Stability"
+
+      immediate_effects:
+        - "Improved Market Confidence"
+
+      delayed_effects:
+        - "Reduced Energy Risk"
+
+    forecast_scenarios:
+
+      most_likely:
+        description: "Diplomatic engagement reduces immediate geopolitical tensions."
+
+      severe_case:
+        description: "Agreement collapses and tensions return."
+
+      best_case:
+        description: "Sustained diplomatic engagement leads to regional stability."
+
+    scenario_confidence:
+
+      most_likely: 60
+
+      severe_case: 20
+
+      best_case: 20
+
+    severity: "medium"
+
    
