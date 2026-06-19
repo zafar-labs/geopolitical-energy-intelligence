@@ -96,6 +96,8 @@ def generate_report():
 
     risk_clusters = {}
 
+    event_occurrences = {}
+
     commodity_exposures = {}
 
     high_risk_domains = 0
@@ -144,6 +146,13 @@ def generate_report():
         print(f"   Severity: {event[5]}")
         print(f"   Source: {event[2]}\n")
         event_code = event[3]
+
+        event_occurrences[event_code] = (
+            event_occurrences.get(
+                event_code,
+                0
+            ) + 1
+        )
 
         for ontology_event in taxonomy:
             if ontology_event["event_id"] == event_code:
@@ -451,6 +460,25 @@ def generate_report():
             print(f"- {area}")
     else:
         print("- None detected")
+    
+    print("=================================\n")
+    print("=================================")
+    print("EVENT FREQUENCY ANALYSIS")
+    print("=================================\n")
+
+    for event_code, count in sorted(
+        event_occurrences.items()
+    ):
+
+        print(
+            f"{event_code}: "
+            f"{count} occurrence(s)"
+        )
+
+    print(
+        "=================================\n"
+    )
+
 
     print("\n=================================")
     print("PAKISTAN EXPOSURE ASSESSMENT")

@@ -108,56 +108,44 @@ if __name__ == "__main__":
         )
 
         if classification:
+            if not store.event_exists(
+                article["title"]
+            ):
+                store.save_event(
+                    article["title"],
+                    article["source"],
+                    classification
+                )
 
-            store.save_event(
-                article["title"],
-                article["source"],
-                classification
-            )
+                events_detected += 1
 
-            events_detected += 1
+                print(
+                    f"\nDetected Event: {classification.get('matched_event')}"
+                )
 
-            print(
-                f"\nDetected Event: {classification['matched_event']}"
-            )
-            print(
-                f"Score: {classification['relevance_score']}"
-            )
-            print(
-                f"Matched Keywords: {classification['matched_keywords']}"
-            )
-            print(
-                f"Headline: {article['title']}"
-            )
+                print(
+                    f"Score: {classification.get('relevance_score')}"
+                )
 
-    print(
-        f"Articles Found: {len(articles)}"
-    )
+                print(
+                    f"Matched Keywords: {classification.get('matched_keywords')}"
+                )
 
-    print(
-        f"Articles Saved: {saved_count}"
-    )
+                print(
+                    f"Headline: {article['title']}"
+                )
 
-    print(
-    f"Events Detected: "
-    f"{events_detected}"
-)
-
-    print(
-        f"Database Articles: "
-        f"{store.count_articles()}"
-    )
+    print(f"Articles Found: {len(articles)}")
+    print(f"Articles Saved: {saved_count}")
+    print(f"Events Detected: {events_detected}")
+    print(f"Database Articles: {store.count_articles()}")
 
     print("\nSample Articles:\n")
-
     for article in articles[:5]:
-
         print("TITLE:")
         print(article["title"])
-
         print("SOURCE:")
         print(article["source"])
-
         print("URL:")
         print(article["url"])
         print()

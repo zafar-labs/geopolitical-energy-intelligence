@@ -110,6 +110,21 @@ class EventStore:
         """)
 
         return self.cursor.fetchone()[0]
+    
+    #template for saving events to the database
+    def count_events(self):
+
+        self.cursor.execute("""
+        SELECT COUNT(*)
+        FROM events
+        """)
+
+        return self.cursor.fetchone()[0]
+    
+        print(
+            f"Database Events: "
+            f"{store.count_events()}"
+        )
 
     def save_event(self, headline, source, classification):
 
