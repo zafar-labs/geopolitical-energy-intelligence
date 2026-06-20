@@ -8,6 +8,19 @@ EXPOSURE_RANK = {
     "very_high": 4
 }
 
+SOURCE_RELIABILITY = {
+
+    "BBC News": 5,
+
+    "NYT > World News": 5,
+
+    "Reuters World News": 5,
+
+    "Associated Press": 5,
+
+    "Simulated News Source": 1
+}
+
 def load_taxonomy():
 
     with open("config/event_taxonomy.yaml", "r") as file:
@@ -98,6 +111,10 @@ def generate_report():
 
     event_occurrences = {}
 
+    event_confirmations = {}
+
+    event_relevance_scores = {}
+
     commodity_exposures = {}
 
     high_risk_domains = 0
@@ -146,6 +163,25 @@ def generate_report():
         print(f"   Severity: {event[5]}")
         print(f"   Source: {event[2]}\n")
         event_code = event[3]
+
+        if event_code not in event_confirmations:
+
+            event_confirmations[event_code] = set()
+
+        event_confirmations[event_code].add(
+            event[2]
+        )
+        
+        if event_code not in event_relevance_scores:
+
+            event_relevance_scores[event_code] = event[6]
+
+        else:
+
+            event_relevance_scores[event_code] = max(
+                event_relevance_scores[event_code],
+                event[6]
+            )
 
         event_occurrences[event_code] = (
             event_occurrences.get(
@@ -479,6 +515,102 @@ def generate_report():
         "=================================\n"
     )
 
+    print(
+    "================================="
+)
+
+    print(
+        "SOURCE CONFIRMATION ANALYSIS"
+    )
+
+    print(
+        "=================================\n"
+    )
+
+    for event_code, sources in event_confirmations.items():
+
+        count = len(sources)
+
+        relevance_score = (
+            event_relevance_scores.get(
+                event_code,
+                0
+            )
+        )
+
+        reliability_score = 0
+
+        for source in sources:
+
+            reliability_score += (
+                SOURCE_RELIABILITY.get(
+                    source,
+                    1
+                )
+            )
+
+            composite_score = (
+                reliability_score
+                +
+                count
+                +
+                relevance_score
+            )
+
+        if composite_score >= 18:
+
+            confidence = "VERY HIGH"
+
+        elif composite_score >= 12:
+
+            confidence = "HIGH"
+
+        elif composite_score >= 8:
+
+            confidence = "MEDIUM"
+
+        else:
+
+            confidence = "LOW"
+
+        print(
+            f"{event_code}"
+        )
+
+        print(
+            f"Sources:"
+        )
+
+        for source in sources:
+
+            print(
+                f"- {source}"
+            )
+
+        print(
+            f"Confirmation Count: "
+            f"{count}"
+        )
+
+        print(
+            f"Reliability Score: "
+            f"{reliability_score}"
+        )
+
+        print(
+            f"Relevance Score: "
+            f"{relevance_score}"
+        )
+
+        print(
+            f"Composite Score: "
+            f"{composite_score}"
+        )
+
+        print(
+            f"Confidence Level: "
+            f"{confidence}\n"
+        )
 
     print("\n=================================")
     print("PAKISTAN EXPOSURE ASSESSMENT")
