@@ -22,20 +22,13 @@ st.title(
 
 store = EventStore()
 
-events = store.fetch_recent_events(20)
+from src.analysis.intelligence_engine import IntelligenceEngine
 
-total_events = len(events)
+engine = IntelligenceEngine()
 
-high_severity_events = 0
+events = engine.get_recent_events()
 
-for event in events:
-
-    if event[5] in [
-        "high",
-        "very_high"
-    ]:
-
-        high_severity_events += 1
+metrics = engine.get_executive_metrics()
 
 st.subheader(
     "Executive Overview"
@@ -47,21 +40,21 @@ with col1:
 
     st.metric(
         "Total Events",
-        total_events
+        metrics["total_events"]
     )
 
 with col2:
 
     st.metric(
         "High-Risk Events",
-        high_severity_events
+        metrics["high_risk_events"]
     )
 
 with col3:
 
     st.metric(
         "Confirmed Events",
-        3
+        metrics["confirmed_events"]
     )
 
 st.divider()
