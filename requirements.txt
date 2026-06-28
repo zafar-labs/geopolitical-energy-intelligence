@@ -4,3 +4,4 @@ requests==2.32.3
 beautifulsoup4==4.12.3
 python-dotenv==1.0.1
 pyyaml==6.0.2
+streamlit==1.58.0
