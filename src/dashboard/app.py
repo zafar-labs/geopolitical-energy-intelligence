@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 import sys
 from pathlib import Path
@@ -28,7 +29,12 @@ engine = IntelligenceEngine()
 
 events = engine.get_recent_events()
 
+
 metrics = engine.get_executive_metrics()
+
+confidence_summary = (
+    engine.get_confidence_summary()
+)
 
 st.subheader(
     "Executive Overview"
@@ -59,6 +65,35 @@ with col3:
 
 st.divider()
 
+st.subheader(
+    "Confidence Analysis"
+)
+
+confidence_rows = []
+
+for event_code, details in confidence_summary.items():
+
+    confidence_rows.append({
+
+        "Event": event_code,
+
+        "Confidence": details["confidence"],
+
+        "Composite Score": details["composite_score"],
+
+        "Confirmations": details["confirmation_count"]
+
+    })
+
+confidence_df = pd.DataFrame(
+    confidence_rows
+)
+
+st.dataframe(
+    confidence_df,
+    use_container_width=True
+)
+
 
 st.subheader(
     "Recent Intelligence Events"
@@ -66,29 +101,26 @@ st.subheader(
 
 if events:
 
+    event_rows = []
+
     for event in events:
 
-        st.write(
-            f"**{event[1]}**"
-        )
+        event_rows.append({
+            "Headline": event.get("headline"),
+            "Event ID": event.get("event_id"),
+            "Severity": event.get("severity"),
+            "Relevance": event.get("relevance"),
+            "Source": event.get("source")
+        })
 
-        st.write(
-            f"Event: {event[3]}"
-        )
+    events_df = pd.DataFrame(
+        event_rows
+    )
 
-        st.write(
-            f"Severity: {event[5]}"
-        )
-
-        st.write(
-            f"Relevance Score: {event[6]}"
-        )
-
-        st.write(
-            f"Source: {event[2]}"
-        )
-
-        st.divider()
+    st.dataframe(
+        events_df,
+        use_container_width=True
+    )
 
 else:
 

@@ -1,3 +1,5 @@
+import yaml
+
 from src.storage.event_store import EventStore
 
 SOURCE_RELIABILITY = {
@@ -13,6 +15,13 @@ SOURCE_RELIABILITY = {
     "Simulated News Source": 1
 }
 
+EXPOSURE_RANK = {
+    "low": 1,
+    "medium": 2,
+    "high": 3,
+    "very_high": 4
+}
+
 
 class IntelligenceEngine:
 
@@ -20,15 +29,149 @@ class IntelligenceEngine:
 
         self.store = EventStore()
 
+    def _load_taxonomy(self):
+
+        """
+        Load the geopolitical event ontology.
+        """
+
+        with open(
+            "config/event_taxonomy.yaml",
+            "r"
+        ) as file:
+
+            taxonomy = yaml.safe_load(file)
+
+        return taxonomy["events"]
+
+    def build_common_operational_picture(self):
+        """
+        Build the Common Operational Picture (COP)
+        from all currently available intelligence.
+        """
+        from datetime import datetime
+
+        cop = {
+            "generated_at": datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+            "metrics": {},
+            "risk": {},
+            "confidence": {},
+            "commodity_exposure": {},
+            "pakistan_exposure": {},
+            "risk_clusters": {},
+            "forecast": {},
+            "recent_events": [],
+            "alerts": [],
+            "metadata": {
+                "version": "1.0",
+                "generated_by": "IntelligenceEngine"
+            }
+        }
+
+        cop["recent_events"] = self.get_recent_events()
+        cop["metrics"] = self.get_executive_metrics()
+        cop["confidence"] = self.get_confidence_summary()
+
+        events = self.store.fetch_high_relevance_events(5)
+        taxonomy = self._load_taxonomy()
+
+        intelligence = self._process_events(
+            events,
+            taxonomy
+        )
+        
+        # Populate exposure matrices and risk clusters from processed events
+        cop["commodity_exposure"] = intelligence["commodity_exposure"]
+        cop["pakistan_exposure"] = intelligence["pakistan_exposure"]
+        cop["risk_clusters"] = intelligence["risk_clusters"]
+        cop["forecast"] = intelligence["forecast"]
+
+        cop["domain_scores"] = intelligence[
+            "domain_scores"
+        ]
+
+        cop["cascade_effects"] = intelligence[
+            "cascade_effects"
+        ]
+
+        cop["escalation_indicators"] = intelligence[
+            "escalation_indicators"
+        ]
+
+        # Safely compute highest event relevance score
+        highest_score = max((event[6] for event in events), default=0) if events else 0
+
+        if highest_score >= 7:
+            overall_risk = "CRITICAL"
+        elif highest_score >= 5:
+            overall_risk = "HIGH"
+        elif highest_score >= 3:
+            overall_risk = "MEDIUM"
+        else:
+            overall_risk = "LOW"
+
+        # Dynamically calculate composite operational risk profiles
+        event_count = len(events)
+        high_risk_domains = intelligence["high_risk_domains_count"]
+        composite_score = highest_score + event_count + high_risk_domains
+
+        if composite_score >= 16:
+            composite_risk = "CRITICAL"
+        elif composite_score >= 12:
+            composite_risk = "HIGH"
+        elif composite_score >= 8:
+            composite_risk = "MEDIUM"
+        else:
+            composite_risk = "LOW"
+
+        cop["risk"] = {
+            "overall_risk": overall_risk,
+            "highest_event_score": highest_score,
+            "assessed_events": event_count,
+            "high_risk_domains": high_risk_domains,
+            "composite_score": composite_score,
+            "composite_risk": composite_risk
+        }
+        
+        return cop
+
 
     def get_recent_events(self, limit=20):
 
         """
-        Return recent intelligence events for any
-        presentation layer (dashboard, reports, API).
+        Return recent intelligence events in a
+        presentation-friendly format.
         """
 
-        return self.store.fetch_recent_events(limit)
+        events = self.store.fetch_recent_events(limit)
+
+        formatted_events = []
+
+        for event in events:
+
+            formatted_events.append({
+
+                "headline": event[1],
+
+                "source": event[2],
+
+                "event_id": event[3],
+
+                "category": event[4],
+
+                "severity": event[5],
+
+                "relevance": event[6],
+
+                "keywords": event[7],
+
+                "created_at": event[8]
+
+            })
+
+        return formatted_events
 
 
     def get_high_risk_events(self, min_score=5):
@@ -174,8 +317,383 @@ class IntelligenceEngine:
             }
 
         return summary
+
+    def get_risk_summary(self):
+
+        """
+        Build the national risk assessment summary.
+        """
+        return {}
     
+    def _process_events(self, events, taxonomy):
+        """
+        Process detected events against the ontology and
+        generate intelligence products.
+        """
+        domain_scores = {}
+        commodity_exposures = {}
+        risk_clusters = {}
+        forecast_scenarios = {}
+
+        strategic_dependencies = set()
+        immediate_effects = set()
+        delayed_effects = set()
+        first_order_effects = set()
+        second_order_effects = set()
+        third_order_effects = set()
+        high_confidence_indicators = set()
+        medium_confidence_indicators = set()
+        monitoring_indicators = set()
+
+        for event in events:
+            event_code = event[3]
+            for ontology_event in taxonomy:
+                if ontology_event["event_id"] == event_code:
+                    event_score = event[6]
+                    event_name = ontology_event.get("trigger_event", {}).get("name", "Unknown Event")
+
+                    impact_domains = ontology_event.get("impact_domains", {})
+                    cascade_effects = ontology_event.get("cascade_effects", {})
+                    escalation_indicators = ontology_event.get("escalation_indicators", {})
+                    crisis_cluster = ontology_event.get("crisis_cluster", {})
+
+                    forecast_data = ontology_event.get(
+                        "forecast_scenarios",
+                        {}
+                    )
+
+                    confidence_data = ontology_event.get(
+                        "scenario_confidence",
+                        {}
+                    )
+
+                    self._update_domain_intelligence(
+                        impact_domains,
+                        cascade_effects,
+                        escalation_indicators,        
+                        event_score,
+                        domain_scores,
+                        first_order_effects,
+                        second_order_effects,
+                        third_order_effects,
+                        high_confidence_indicators,
+                        medium_confidence_indicators,
+                        monitoring_indicators
+                    )
+
+                    # Populates the clusters using your new helper method
+                    self._update_risk_intelligence(
+                        crisis_cluster,
+                        event_name,
+                        event_score,
+                        risk_clusters
+                    )
+
+                    self._update_scenario_intelligence(
+                        event_code,
+                        event_name,
+                        forecast_data,
+                        confidence_data,
+                        forecast_scenarios
+                    )
+
+                    pakistan_exposure = ontology_event.get("pakistan_exposure", {})
+                    self._update_pakistan_exposure(
+                        pakistan_exposure,
+                        strategic_dependencies,
+                        immediate_effects,
+                        delayed_effects
+                    )
+
+                    commodity_exposure = ontology_event.get("commodity_exposure", {})  
+                    self._update_commodity_exposure(
+                        commodity_exposure,
+                        commodity_exposures
+                    )              
+                                                                                                        
+                    break
+
+        # Calculate high risk domains for the composite score calculation
+        high_risk_domains_count = sum(1 for score in domain_scores.values() if score >= 9)
+
+        return {
+            "commodity_exposure": commodity_exposures,
+            "forecast": forecast_scenarios,
+            "risk_clusters": risk_clusters,
+            "high_risk_domains_count": high_risk_domains_count,
+            "domain_scores": domain_scores,
+
+            "cascade_effects": {
+
+                "first_order":
+                    sorted(first_order_effects),
+
+                "second_order":
+                    sorted(second_order_effects),
+
+                "third_order":
+                    sorted(third_order_effects)
+
+            },
+
+            "escalation_indicators": {
+
+                "high":
+                    sorted(high_confidence_indicators),
+
+                "medium":
+                    sorted(medium_confidence_indicators),
+
+                "monitoring":
+                    sorted(monitoring_indicators)
+
+            },
+            "pakistan_exposure": {
+                "strategic_dependencies": sorted(strategic_dependencies),
+                "immediate_effects": sorted(immediate_effects),
+                "delayed_effects": sorted(delayed_effects)
+            }
+        }
+    
+    def _update_commodity_exposure(
+        self,
+        commodity_exposure,
+        commodity_exposures
+    ):
+
+        """
+        Update the national commodity exposure profile
+        using a single ontology event.
+        """
+
+        for commodity, details in commodity_exposure.items():
+
+            exposure_level = details.get(
+                "exposure_level",
+                "unknown"
+            )
+
+            current_level = commodity_exposures.get(
+                commodity
+            )
+
+            if current_level is None:
+
+                commodity_exposures[
+                    commodity
+                ] = exposure_level
+
+            else:
+
+                if (
+                    EXPOSURE_RANK.get(
+                        exposure_level,
+                        0
+                    )
+                    >
+                    EXPOSURE_RANK.get(
+                        current_level,
+                        0
+                    )
+                ):
+
+                    commodity_exposures[
+                        commodity
+                    ] = exposure_level
+
+
+    def _update_pakistan_exposure(
+        self,
+        pakistan_exposure,
+        strategic_dependencies,
+        immediate_effects,
+        delayed_effects
+    ):
+
+        """
+        Update Pakistan-specific exposure assessment
+        using a single ontology event.
+        """
+
+        for item in pakistan_exposure.get(
+            "strategic_dependency",
+            []
+        ):
+
+            strategic_dependencies.add(item)
+
+        for item in pakistan_exposure.get(
+            "immediate_effects",
+            []
+        ):
+
+            immediate_effects.add(item)
+
+        for item in pakistan_exposure.get(
+            "delayed_effects",
+            []
+        ):
+
+            delayed_effects.add(item)
+    def _update_domain_intelligence(
+        self,
+        impact_domains,
+        cascade_effects,
+        escalation_indicators,
+        event_score,
+        domain_scores,
+        first_order_effects,
+        second_order_effects,
+        third_order_effects,
+        high_confidence_indicators,
+        medium_confidence_indicators,
+        monitoring_indicators
+    ):
+
+        """
+        Update domain-level intelligence derived from
+        a single ontology event.
+        """
+
+        for domain_name in impact_domains.keys():
+
+            domain_scores[domain_name] = (
+                domain_scores.get(
+                    domain_name,
+                    0
+                )
+                +
+                event_score
+            )
+
+        for item in cascade_effects.get(
+            "first_order",
+            []
+        ):
+
+            first_order_effects.add(item)
+
+        for item in cascade_effects.get(
+            "second_order",
+            []
+        ):
+
+            second_order_effects.add(item)
+
+        for item in cascade_effects.get(
+            "third_order",
+            []
+        ):
+
+            third_order_effects.add(item)
+
+        for item in escalation_indicators.get(
+            "high_confidence",
+            []
+        ):
+
+            high_confidence_indicators.add(item)
+
+        for item in escalation_indicators.get(
+            "medium_confidence",
+            []
+        ):
+
+            medium_confidence_indicators.add(item)
+
+        for item in escalation_indicators.get(
+            "monitoring",
+            []
+        ):
+
+            monitoring_indicators.add(item)
+
+    def _update_risk_intelligence(self, crisis_cluster, event_name, event_score, risk_clusters):
+        """
+        Group events into correlated threat/crisis clusters and aggregate scores.
+        """
+        cluster_name = crisis_cluster.get("cluster_name")
+        if cluster_name:
+            if cluster_name not in risk_clusters:
+                risk_clusters[cluster_name] = {
+                    "events": [],
+                    "score": 0
+                }
+            
+            if event_name not in risk_clusters[cluster_name]["events"]:
+                risk_clusters[cluster_name]["events"].append(event_name)
+                
+            risk_clusters[cluster_name]["score"] += event_score
+
+    def _update_scenario_intelligence(
+        self,
+        event_id,
+        event_name,
+        forecast_data,
+        confidence_data,
+        forecast_scenarios
+    ):
+        """
+        Store scenario forecasts associated with a
+        strategic event.
+        """
+
+        if event_id not in forecast_scenarios:
+
+            forecast_scenarios[event_id] = {
+
+                "event_name": event_name,
+
+                "most_likely": forecast_data.get(
+                    "most_likely",
+                    {}
+                ).get(
+                    "description",
+                    "Not Available"
+                ),
+
+                "severe_case": forecast_data.get(
+                    "severe_case",
+                    {}
+                ).get(
+                    "description",
+                    "Not Available"
+                ),
+
+                "best_case": forecast_data.get(
+                    "best_case",
+                    {}
+                ).get(
+                    "description",
+                    "Not Available"
+                ),
+
+                "confidence": confidence_data
+
+            }
+
+# if __name__ == "__main__":
+
+#     engine = IntelligenceEngine()
+
+#     print(
+#         engine.get_risk_summary()
+#     )
 if __name__ == "__main__":
+
     engine = IntelligenceEngine()
-    confidence = engine.get_confidence_summary()
-    print(confidence)
+
+    # cop = engine.build_common_operational_picture()
+
+    # print(cop)
+    cop = engine.build_common_operational_picture()
+
+    print(cop["risk"])
+    # print(cop["commodity_exposure"])
+    # print(cop["pakistan_exposure"])
+    print(cop["forecast"])
+    print(cop["domain_scores"])
+
+    print(cop["cascade_effects"])
+
+    print(cop["escalation_indicators"])
