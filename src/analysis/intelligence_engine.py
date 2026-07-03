@@ -87,18 +87,10 @@ class IntelligenceEngine:
         cop["pakistan_exposure"] = intelligence["pakistan_exposure"]
         cop["risk_clusters"] = intelligence["risk_clusters"]
         cop["forecast"] = intelligence["forecast"]
-
-        cop["domain_scores"] = intelligence[
-            "domain_scores"
-        ]
-
-        cop["cascade_effects"] = intelligence[
-            "cascade_effects"
-        ]
-
-        cop["escalation_indicators"] = intelligence[
-            "escalation_indicators"
-        ]
+        cop["domain_scores"] = intelligence["domain_scores"]
+        cop["cascade_effects"] = intelligence["cascade_effects"]
+        cop["escalation_indicators"] = intelligence["escalation_indicators"]
+        cop["impact_areas"] = intelligence["impact_areas"]
 
         # Safely compute highest event relevance score
         highest_score = max((event[6] for event in events), default=0) if events else 0
@@ -325,6 +317,23 @@ class IntelligenceEngine:
         """
         return {}
     
+    def _calculate_risk_level(self, score):
+        """
+        Convert a numerical score into a standardized
+        operational risk level.
+        """
+
+        if score >= 13:
+            return "CRITICAL"
+
+        elif score >= 9:
+            return "HIGH"
+
+        elif score >= 5:
+            return "MEDIUM"
+
+        return "LOW"
+    
     def _process_events(self, events, taxonomy):
         """
         Process detected events against the ontology and
@@ -338,6 +347,7 @@ class IntelligenceEngine:
         strategic_dependencies = set()
         immediate_effects = set()
         delayed_effects = set()
+        impact_areas = set()
         first_order_effects = set()
         second_order_effects = set()
         third_order_effects = set()
@@ -424,35 +434,23 @@ class IntelligenceEngine:
             "domain_scores": domain_scores,
 
             "cascade_effects": {
-
-                "first_order":
-                    sorted(first_order_effects),
-
-                "second_order":
-                    sorted(second_order_effects),
-
-                "third_order":
-                    sorted(third_order_effects)
-
+                "first_order":sorted(first_order_effects),
+                "second_order":sorted(second_order_effects),
+                "third_order":sorted(third_order_effects)
             },
 
             "escalation_indicators": {
-
-                "high":
-                    sorted(high_confidence_indicators),
-
-                "medium":
-                    sorted(medium_confidence_indicators),
-
-                "monitoring":
-                    sorted(monitoring_indicators)
-
+                "high_confidence": sorted(high_confidence_indicators),
+                "medium_confidence": sorted(medium_confidence_indicators),
+                "monitoring": sorted(monitoring_indicators)
             },
+
             "pakistan_exposure": {
                 "strategic_dependencies": sorted(strategic_dependencies),
                 "immediate_effects": sorted(immediate_effects),
                 "delayed_effects": sorted(delayed_effects)
-            }
+            },
+            "impact_areas": sorted(impact_areas)  # Extracted area list
         }
     
     def _update_commodity_exposure(
@@ -617,13 +615,20 @@ class IntelligenceEngine:
             if cluster_name not in risk_clusters:
                 risk_clusters[cluster_name] = {
                     "events": [],
-                    "score": 0
+                    "score": 0,
+                    "risk_level": "LOW"
                 }
             
             if event_name not in risk_clusters[cluster_name]["events"]:
                 risk_clusters[cluster_name]["events"].append(event_name)
                 
             risk_clusters[cluster_name]["score"] += event_score
+            
+            risk_clusters[cluster_name]["risk_level"] = (
+                self._calculate_risk_level(
+                    risk_clusters[cluster_name]["score"]
+                )
+            )
 
     def _update_scenario_intelligence(
         self,
