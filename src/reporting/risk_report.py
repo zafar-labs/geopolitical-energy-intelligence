@@ -15,6 +15,7 @@ def generate_report():
     
     # Unpack the calculated products from the client data layer
     risk_summary = cop["risk"]
+    executive = cop["executive_assessment"]
     metrics = cop["metrics"]
     events = cop["recent_events"]
     risk_clusters = cop["risk_clusters"]
@@ -30,17 +31,36 @@ def generate_report():
     print("PAKISTAN ENERGY RISK SUMMARY")
     print("=================================\n")
 
+    print("EXECUTIVE SUMMARY")
+    print("---------------------------------")
+    print(f"Overall Risk      : {risk_summary['overall_risk']}")
+    print(f"Composite Risk    : {risk_summary['composite_risk']}")
+    print(f"Composite Score   : {risk_summary['composite_score']}")
+    print()
+    print(f"Events Assessed   : {risk_summary['assessed_events']}")
+    print(f"Total Events      : {metrics['total_events']}")
+    print(f"High Risk Events  : {metrics['high_risk_events']}")
+    print(f"Confirmed Events  : {metrics['confirmed_events']}")
+    print(f"High Risk Domains : {risk_summary['high_risk_domains']}")
+    print("\n=================================\n")
+
     if not events:
-        print("No high-priority events detected.")
+        print("No High-Priority Events.")
         return
 
-    print("High-Priority Events Detected:\n")
-    for idx, event in enumerate(events, start=1):
-        # Filter visibility to showcase critical signals
-        if event["relevance"] >= 5:
-            print(f"{idx}. {event['headline']}")
-            print(f"   Severity: {event['severity'].upper()}")
-            print(f"   Source: {event['source']}\n")
+    print("=================================")
+    print("HIGH-PRIORITY EVENTS")
+    print("=================================\n")
+
+    high_priority_events = [
+        event for event in events
+        if event["relevance"] >= 5
+    ]
+
+    for idx, event in enumerate(high_priority_events, start=1):
+        print(f"{idx}. {event['headline']}")
+        print(f"   Severity: {event['severity'].upper()}")
+        print(f"   Source: {event['source']}\n")
 
     print("Overall Risk Assessment:")
     print(f"{risk_summary['overall_risk']}\n")
@@ -89,21 +109,7 @@ def generate_report():
             print(f"- {area}")
     else:
         print("- None detected")
-
-    print("\n=================================")
-    print("SOURCE CONFIRMATION ANALYSIS")
-    print("=================================\n")
-    for event_code, details in confidence_summary.items():
-        print(f"{event_code}")
-        print("Sources:")
-        for source in details["sources"]:
-            print(f"- {source}")
-        print(f"Confirmation Count: {details['confirmation_count']}")
-        print(f"Reliability Score: {details['reliability_score']}")
-        print(f"Relevance Score: {details['relevance_score']}")
-        print(f"Composite Score: {details['composite_score']}")
-        print(f"Confidence Level: {details['confidence']}\n")
-
+    
     print("=================================")
     print("PAKISTAN EXPOSURE ASSESSMENT")
     print("=================================\n")
@@ -158,6 +164,41 @@ def generate_report():
         print(f"Best Case Scenario:")
         print(f"- {scenario['best_case']}\n")
         print("---------------------------------\n")
+
+    print("\n=================================")
+    print("SOURCE CONFIRMATION ANALYSIS")
+    print("=================================\n")
+    for event_code, details in confidence_summary.items():
+        print(f"{event_code}")
+        print("Sources:")
+        for source in details["sources"]:
+            print(f"- {source}")
+        print(f"Confirmation Count: {details['confirmation_count']}")
+        print(f"Reliability Score: {details['reliability_score']}")
+        print(f"Relevance Score: {details['relevance_score']}")
+        print(f"Composite Score: {details['composite_score']}")
+        print(f"Confidence Level: {details['confidence']}\n")
+
+    print("=================================")
+    print("EXECUTIVE ANALYST ASSESSMENT")
+    print("=================================\n")
+
+    print(executive["risk_statement"])
+    print()
+
+    print("Primary Drivers:")
+    for driver in executive["primary_drivers"]:
+        print(f"- {driver}")
+
+    print("\nHighest Exposures:")
+    for exposure in executive["highest_exposures"]:
+        print(f"- {exposure}")
+
+    print("\nPriority Monitoring:")
+    for item in executive["priority_monitoring"]:
+        print(f"- {item}")
+
+    print()
 
 if __name__ == "__main__":
     generate_report()

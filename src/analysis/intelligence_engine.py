@@ -92,6 +92,7 @@ class IntelligenceEngine:
         cop["cascade_effects"] = intelligence["cascade_effects"]
         cop["escalation_indicators"] = intelligence["escalation_indicators"]
         cop["impact_areas"] = intelligence["impact_areas"]
+        # cop["executive_assessment"] = self._build_executive_assessment(cop)
 
         # Safely compute highest event relevance score
         highest_score = max((event[6] for event in events), default=0) if events else 0
@@ -127,6 +128,8 @@ class IntelligenceEngine:
             "composite_score": composite_score,
             "composite_risk": composite_risk
         }
+
+        cop["executive_assessment"] = self._build_executive_assessment(cop)
         
         return cop
 
@@ -691,6 +694,45 @@ class IntelligenceEngine:
 
             }
 
+    def _build_executive_assessment(self, cop):
+        primary_drivers = list(cop["risk_clusters"].keys())      
+        highest_exposures = []
+
+        for commodity, exposure in cop["commodity_exposure"].items():
+
+            if exposure.lower() in ("high", "very_high"):
+
+                if commodity == "lng":
+                    display_name = "LNG"
+                else:
+                    display_name = commodity.replace("_", " ").title()
+
+                highest_exposures.append((display_name, exposure))
+
+        priority = {
+            "very_high": 0,
+            "high": 1
+        }
+
+        highest_exposures.sort(
+            key=lambda item: priority[item[1]]
+        )
+
+        highest_exposures = [
+            name for name, _ in highest_exposures
+        ]
+
+        priority_monitoring = cop["escalation_indicators"]["high_confidence"][:5]
+        
+        return {
+            "risk_statement": (
+                f"Current strategic energy risk is "
+                f"{cop['risk']['overall_risk']}."
+            ),
+            "primary_drivers": primary_drivers,
+            "highest_exposures": highest_exposures,
+            "priority_monitoring": priority_monitoring,
+        }
 # if __name__ == "__main__":
 
 #     engine = IntelligenceEngine()
@@ -699,11 +741,9 @@ class IntelligenceEngine:
 #         engine.get_risk_summary()
 #     )
 if __name__ == "__main__":
-
     engine = IntelligenceEngine()
 
     # cop = engine.build_common_operational_picture()
-
     # print(cop)
     cop = engine.build_common_operational_picture()
 
@@ -712,10 +752,6 @@ if __name__ == "__main__":
     # print(cop["pakistan_exposure"])
     print(cop["forecast"])
     print(cop["domain_scores"])
-
     # print(cop["domain_assessment"])
-
     print(cop["cascade_effects"])
-
-
     print(cop["escalation_indicators"])
