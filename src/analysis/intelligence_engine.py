@@ -88,6 +88,7 @@ class IntelligenceEngine:
         cop["risk_clusters"] = intelligence["risk_clusters"]
         cop["forecast"] = intelligence["forecast"]
         cop["domain_scores"] = intelligence["domain_scores"]
+        cop["domain_assessment"] = intelligence["domain_assessment"]
         cop["cascade_effects"] = intelligence["cascade_effects"]
         cop["escalation_indicators"] = intelligence["escalation_indicators"]
         cop["impact_areas"] = intelligence["impact_areas"]
@@ -426,12 +427,25 @@ class IntelligenceEngine:
         # Calculate high risk domains for the composite score calculation
         high_risk_domains_count = sum(1 for score in domain_scores.values() if score >= 9)
 
+        domain_assessment = {}
+
+        for domain_name, score in domain_scores.items():
+
+            domain_assessment[domain_name] = {
+
+                "score": score,
+
+                "risk_level": self._calculate_risk_level(score)
+
+            }
+
         return {
             "commodity_exposure": commodity_exposures,
             "forecast": forecast_scenarios,
             "risk_clusters": risk_clusters,
             "high_risk_domains_count": high_risk_domains_count,
             "domain_scores": domain_scores,
+            "domain_assessment": domain_assessment,
 
             "cascade_effects": {
                 "first_order":sorted(first_order_effects),
@@ -699,6 +713,9 @@ if __name__ == "__main__":
     print(cop["forecast"])
     print(cop["domain_scores"])
 
+    # print(cop["domain_assessment"])
+
     print(cop["cascade_effects"])
+
 
     print(cop["escalation_indicators"])

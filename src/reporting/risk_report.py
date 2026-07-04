@@ -8,13 +8,6 @@ if str(project_root) not in sys.path:
 
 from src.analysis.intelligence_engine import IntelligenceEngine
 
-def calculate_risk_level(score):
-    """Helper formatting rule for console visibility."""
-    if score >= 13: return "CRITICAL"
-    elif score >= 9: return "HIGH"
-    elif score >= 5: return "MEDIUM"
-    return "LOW"
-
 def generate_report():
     # Instantiate engine and consume unified COP payload
     engine = IntelligenceEngine()
@@ -25,7 +18,7 @@ def generate_report():
     metrics = cop["metrics"]
     events = cop["recent_events"]
     risk_clusters = cop["risk_clusters"]
-    domain_scores = cop["domain_scores"]
+    domain_assessment = cop["domain_assessment"]
     commodity_exposures = cop["commodity_exposure"]
     pakistan_exposure = cop["pakistan_exposure"]
     cascade_effects = cop["cascade_effects"]
@@ -72,10 +65,16 @@ def generate_report():
     print("=================================")
     print("DOMAIN RISK ASSESSMENT")
     print("=================================\n")
-    for domain, score in sorted(domain_scores.items(), key=lambda x: x[1], reverse=True):
-        print(f"{domain}")
-        print(f"Score: {score}")
-        print(f"Risk Level: {calculate_risk_level(score)}\n")
+
+    for domain, details in sorted(
+        domain_assessment.items(),
+        key=lambda item: item[1]["score"],
+        reverse=True
+    ):
+
+        print(domain)
+        print(f"Score: {details['score']}")
+        print(f"Risk Level: {details['risk_level']}\n")
 
     print("=================================")
     print("COMMODITY EXPOSURE ASSESSMENT")
