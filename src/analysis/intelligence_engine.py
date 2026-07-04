@@ -1,3 +1,11 @@
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parents[2]
+
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
+
 import yaml
 
 from src.storage.event_store import EventStore
@@ -376,6 +384,11 @@ class IntelligenceEngine:
                         {}
                     )
 
+                    event_impact_areas = ontology_event.get(
+                        "impact_areas",
+                        []
+                    )
+
                     confidence_data = ontology_event.get(
                         "scenario_confidence",
                         {}
@@ -423,7 +436,9 @@ class IntelligenceEngine:
                     self._update_commodity_exposure(
                         commodity_exposure,
                         commodity_exposures
-                    )              
+                    )  
+
+                    impact_areas.update(event_impact_areas)            
                                                                                                         
                     break
 
@@ -748,10 +763,11 @@ if __name__ == "__main__":
     cop = engine.build_common_operational_picture()
 
     print(cop["risk"])
-    # print(cop["commodity_exposure"])
-    # print(cop["pakistan_exposure"])
+    print(cop["commodity_exposure"])
+    print(cop["pakistan_exposure"])
     print(cop["forecast"])
     print(cop["domain_scores"])
-    # print(cop["domain_assessment"])
+    print(cop["domain_assessment"])
     print(cop["cascade_effects"])
     print(cop["escalation_indicators"])
+    print(cop["impact_areas"])

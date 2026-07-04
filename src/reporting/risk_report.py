@@ -8,28 +8,20 @@ if str(project_root) not in sys.path:
 
 from src.analysis.intelligence_engine import IntelligenceEngine
 
-def generate_report():
-    # Instantiate engine and consume unified COP payload
-    engine = IntelligenceEngine()
-    cop = engine.build_common_operational_picture()
-    
-    # Unpack the calculated products from the client data layer
-    risk_summary = cop["risk"]
-    executive = cop["executive_assessment"]
-    metrics = cop["metrics"]
-    events = cop["recent_events"]
-    risk_clusters = cop["risk_clusters"]
-    domain_assessment = cop["domain_assessment"]
-    commodity_exposures = cop["commodity_exposure"]
-    pakistan_exposure = cop["pakistan_exposure"]
-    cascade_effects = cop["cascade_effects"]
-    escalation_indicators = cop["escalation_indicators"]
-    forecast = cop["forecast"]
-    confidence_summary = cop["confidence"]
 
+def print_section(title):
+    print("=================================")
+    print(title)
+    print("=================================\n")
+
+
+def print_report_header():
     print("\n=================================")
     print("PAKISTAN ENERGY RISK SUMMARY")
     print("=================================\n")
+
+
+def print_executive_summary(risk_summary, metrics):
 
     print("EXECUTIVE SUMMARY")
     print("---------------------------------")
@@ -37,6 +29,7 @@ def generate_report():
     print(f"Composite Risk    : {risk_summary['composite_risk']}")
     print(f"Composite Score   : {risk_summary['composite_score']}")
     print()
+
     print(f"Events Assessed   : {risk_summary['assessed_events']}")
     print(f"Total Events      : {metrics['total_events']}")
     print(f"High Risk Events  : {metrics['high_risk_events']}")
@@ -44,16 +37,14 @@ def generate_report():
     print(f"High Risk Domains : {risk_summary['high_risk_domains']}")
     print("\n=================================\n")
 
-    if not events:
-        print("No High-Priority Events.")
-        return
 
-    print("=================================")
-    print("HIGH-PRIORITY EVENTS")
-    print("=================================\n")
+def print_high_priority_events(events, risk_summary):
+
+    print_section("HIGH-PRIORITY EVENTS")
 
     high_priority_events = [
-        event for event in events
+        event
+        for event in events
         if event["relevance"] >= 5
     ]
 
@@ -69,10 +60,13 @@ def generate_report():
     print(f"Risk Level: {risk_summary['composite_risk']}")
     print(f"Composite Score: {risk_summary['composite_score']}\n")
 
-    print("=================================")
-    print("CORRELATED RISK CLUSTERS")
-    print("=================================\n")
+
+def print_risk_clusters(risk_clusters):
+
+    print_section("CORRELATED RISK CLUSTERS")
+
     for cluster_name, cluster_data in risk_clusters.items():
+
         print(f"Cluster: {cluster_name}")
         print(f"Combined Score: {cluster_data['score']}")
         print(f"Risk Level: {cluster_data['risk_level']}")
@@ -80,11 +74,12 @@ def generate_report():
         print("Events:")
         for event_name in cluster_data["events"]:
             print(f"- {event_name}")
+
         print()
 
-    print("=================================")
-    print("DOMAIN RISK ASSESSMENT")
-    print("=================================\n")
+def print_domain_assessment(domain_assessment):
+
+    print_section("DOMAIN RISK ASSESSMENT")
 
     for domain, details in sorted(
         domain_assessment.items(),
@@ -96,92 +91,127 @@ def generate_report():
         print(f"Score: {details['score']}")
         print(f"Risk Level: {details['risk_level']}\n")
 
-    print("=================================")
-    print("COMMODITY EXPOSURE ASSESSMENT")
-    print("=================================\n")
-    for commodity, exposure in sorted(commodity_exposures.items()):
+def print_commodity_exposure(
+    commodity_exposures,
+    impact_areas
+):
+
+    print_section("COMMODITY EXPOSURE ASSESSMENT")
+
+    for commodity, exposure in sorted(
+        commodity_exposures.items()
+    ):
         print(f"{commodity}: {exposure.upper()}")
+
     print()
-    
+
     print("Potential Areas of Concern:")
-    if cop["impact_areas"]:
-        for area in cop["impact_areas"]:
+
+    if impact_areas:
+        for area in impact_areas:
             print(f"- {area}")
     else:
         print("- None detected")
-    
-    print("=================================")
-    print("PAKISTAN EXPOSURE ASSESSMENT")
-    print("=================================\n")
+
+    print()
+
+def print_pakistan_exposure(
+    pakistan_exposure
+):
+
+    print_section("PAKISTAN EXPOSURE ASSESSMENT")
+
     print("Strategic Dependencies:")
     for item in pakistan_exposure["strategic_dependencies"]:
         print(f"- {item}")
+
     print("\nImmediate Effects:")
     for item in pakistan_exposure["immediate_effects"]:
         print(f"- {item}")
+
     print("\nDelayed Effects:")
     for item in pakistan_exposure["delayed_effects"]:
         print(f"- {item}")
+
     print("=================================\n")
 
-    print("CASCADING RISK ASSESSMENT")
-    print("=================================\n")
+def print_cascade_assessment(cascade_effects):
+
+    print_section("CASCADING RISK ASSESSMENT")
+
     print("First-Order Effects:")
     for item in cascade_effects["first_order"]:
         print(f"- {item}")
+
     print("\nSecond-Order Effects:")
     for item in cascade_effects["second_order"]:
         print(f"- {item}")
-    print("\nThird-Order Effects:")  
+
+    print("\nThird-Order Effects:")
     for item in cascade_effects["third_order"]:
         print(f"- {item}")
+
     print("=================================\n")
 
-    print("=================================")
-    print("ESCALATION MONITORING")
-    print("=================================\n")
+def print_escalation_monitoring(escalation_indicators):
+
+    print_section("ESCALATION MONITORING")
+
     print("High-Confidence Indicators:")
     for item in escalation_indicators["high_confidence"]:
         print(f"- {item}")
+
     print("\nMedium-Confidence Indicators:")
     for item in escalation_indicators["medium_confidence"]:
         print(f"- {item}")
+
     print("\nMonitoring Indicators:")
     for item in escalation_indicators["monitoring"]:
         print(f"- {item}")
+
     print("=================================\n")
 
-    print("=================================")
-    print("FORECAST ASSESSMENT")
-    print("=================================\n")
-    for event_id, scenario in forecast.items():
-        # Read pre-calculated metrics to display dynamically
+def print_forecast_assessment(forecast):
+
+    print_section("FORECAST ASSESSMENT")
+
+    for _, scenario in forecast.items():
+
         print(f"Event: {scenario['event_name']}\n")
-        print(f"Most Likely Scenario:")
+
+        print("Most Likely Scenario:")
         print(f"- {scenario['most_likely']}\n")
-        print(f"Severe Scenario:")
+
+        print("Severe Scenario:")
         print(f"- {scenario['severe_case']}\n")
-        print(f"Best Case Scenario:")
+
+        print("Best Case Scenario:")
         print(f"- {scenario['best_case']}\n")
+
         print("---------------------------------\n")
 
-    print("\n=================================")
-    print("SOURCE CONFIRMATION ANALYSIS")
-    print("=================================\n")
+def print_source_confirmation(confidence_summary):
+
+    print()
+    print_section("SOURCE CONFIRMATION ANALYSIS")
+
     for event_code, details in confidence_summary.items():
-        print(f"{event_code}")
+
+        print(event_code)
+
         print("Sources:")
         for source in details["sources"]:
             print(f"- {source}")
+
         print(f"Confirmation Count: {details['confirmation_count']}")
         print(f"Reliability Score: {details['reliability_score']}")
         print(f"Relevance Score: {details['relevance_score']}")
         print(f"Composite Score: {details['composite_score']}")
         print(f"Confidence Level: {details['confidence']}\n")
 
-    print("=================================")
-    print("EXECUTIVE ANALYST ASSESSMENT")
-    print("=================================\n")
+def print_executive_assessment(executive):
+
+    print_section("EXECUTIVE ANALYST ASSESSMENT")
 
     print(executive["risk_statement"])
     print()
@@ -199,6 +229,82 @@ def generate_report():
         print(f"- {item}")
 
     print()
+
+def generate_report():
+
+    # Instantiate engine and consume unified COP payload
+    engine = IntelligenceEngine()
+    cop = engine.build_common_operational_picture()
+
+    # Unpack the calculated products from the COP
+    risk_summary = cop["risk"]
+    executive = cop["executive_assessment"]
+    metrics = cop["metrics"]
+    events = cop["recent_events"]
+    risk_clusters = cop["risk_clusters"]
+    domain_assessment = cop["domain_assessment"]
+    commodity_exposures = cop["commodity_exposure"]
+    pakistan_exposure = cop["pakistan_exposure"]
+    cascade_effects = cop["cascade_effects"]
+    escalation_indicators = cop["escalation_indicators"]
+    forecast = cop["forecast"]
+    confidence_summary = cop["confidence"]
+    impact_areas = cop["impact_areas"]
+
+    # Report Rendering
+
+    print_report_header()
+
+    print_executive_summary(
+        risk_summary,
+        metrics
+    )
+
+    if not events:
+        print("No High-Priority Events.")
+        return
+
+    print_high_priority_events(
+        events,
+        risk_summary
+    )
+
+    print_risk_clusters(
+        risk_clusters
+    )
+
+    print_domain_assessment(
+        domain_assessment
+    )
+
+    print_commodity_exposure(
+        commodity_exposures,
+        impact_areas
+    )
+
+    print_pakistan_exposure(
+        pakistan_exposure
+    )
+
+    print_cascade_assessment(
+        cascade_effects
+    )
+
+    print_escalation_monitoring(
+        escalation_indicators
+    )
+
+    print_forecast_assessment(
+        forecast
+    )
+
+    print_source_confirmation(
+        confidence_summary
+    )
+
+    print_executive_assessment(
+        executive
+    )
 
 if __name__ == "__main__":
     generate_report()

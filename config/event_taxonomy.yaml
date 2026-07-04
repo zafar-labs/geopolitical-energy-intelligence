@@ -74,6 +74,15 @@ events:
       industrial:
         - "Higher Production Costs"
 
+    impact_areas:
+
+    - Fuel Imports
+    - LNG Supply
+    - Electricity Generation
+    - Inflation
+    - Foreign Exchange Reserves
+    - Industrial Production
+
     global_effects:
 
       immediate:
@@ -241,6 +250,14 @@ events:
       financial_markets:
         - "Energy Sector Uncertainty"
 
+    impact_areas:
+
+      - LNG Supply
+      - Power Generation
+      - Gas Distribution
+      - Industrial Production
+      - Electricity Generation
+
     global_effects:
 
       immediate:
@@ -384,6 +401,14 @@ events:
       financial_markets:
         - Risk-Off Sentiment
 
+    impact_areas:
+
+    - Regional Stability
+    - Energy Markets
+    - Investor Confidence
+    - Security Environment
+    - Cross-Border Tensions
+
     pakistan_exposure:
 
       strategic_dependency:
@@ -433,6 +458,13 @@ events:
 
       financial_markets:
         - "Positive Market Sentiment"
+
+    impact_areas:
+
+    - Regional Stability
+    - Energy Markets
+    - Investor Confidence
+    - Fuel Pricing
 
     pakistan_exposure:
 
