@@ -137,6 +137,16 @@ class IntelligenceEngine:
             "composite_risk": composite_risk
         }
 
+        cop["analytical_judgment"] = (
+            self._build_analytical_judgment(
+                highest_score,
+                event_count,
+                high_risk_domains,
+                composite_score,
+                intelligence["commodity_exposure"]
+            )
+        )
+
         cop["executive_assessment"] = self._build_executive_assessment(cop)
         
         return cop
@@ -708,6 +718,46 @@ class IntelligenceEngine:
                 "confidence": confidence_data
 
             }
+
+    def _build_analytical_judgment(
+        self,
+        highest_score,
+        event_count,
+        high_risk_domains,
+        composite_score,
+        commodity_exposure
+    ):
+        """
+        Build analyst-readable justification for the
+        overall strategic assessment.
+        """
+
+        judgment = []
+
+        if highest_score >= 5:
+            judgment.append(
+                "Multiple high-relevance geopolitical events are currently active."
+            )
+
+        if high_risk_domains >= 3:
+            judgment.append(
+                f"{high_risk_domains} strategic domains are assessed at elevated risk."
+            )
+
+        if any(
+            level.lower() in ("high", "very_high")
+            for level in commodity_exposure.values()
+        ):
+            judgment.append(
+                "Critical energy commodities remain exposed to regional disruption."
+            )
+
+        if composite_score >= 12:
+            judgment.append(
+                "Composite operational indicators support a HIGH strategic risk assessment."
+            )
+
+        return judgment
 
     def _build_executive_assessment(self, cop):
         primary_drivers = list(cop["risk_clusters"].keys())      

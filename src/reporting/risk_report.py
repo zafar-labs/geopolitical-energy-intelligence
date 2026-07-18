@@ -201,7 +201,10 @@ def print_source_confirmation(confidence_summary):
         print(f"    Resulting Confidence:    {format_label(details['confidence'])}\n")
 
 
-def print_executive_assessment(executive):
+def print_executive_assessment(
+    executive,
+    analytical_judgment
+):
     print_section_header("EXECUTIVE ANALYTIC ASSESSMENT")
 
     print("  BLUF (Bottom Line Up Front):")
@@ -221,6 +224,16 @@ def print_executive_assessment(executive):
     print("\n  PRIORITY INTELLIGENCE REQUIREMENTS (PIRs):")
     for item in executive.get("priority_monitoring", []):
         print(f"    [ʘ] {item}")
+
+    print()
+
+    print("  ASSESSMENT BASIS:")
+
+    for statement in analytical_judgment:
+
+        print(f"    • {statement}")
+
+    print()
     print("\n================================================================\n")
 
 
@@ -236,6 +249,11 @@ def generate_report():
         "highest_exposures": ["LNG", "Crude Oil", "Refined Fuels", "Power Generation", "Industrial Gas"],
         "priority_monitoring": ["LNG Cargo Cancellation", "Mine Deployment", "Naval Interdiction", "Tanker Attack", "Terminal Shutdown"]
     })
+
+    analytical_judgment = cop.get(
+        "analytical_judgment",
+        []
+    )
     metrics = cop["metrics"]
     events = cop["recent_events"]
     risk_clusters = cop["risk_clusters"]
@@ -261,7 +279,12 @@ def generate_report():
     print_escalation_monitoring(escalation_indicators)
     print_forecast_assessment(forecast)
     print_source_confirmation(confidence_summary)
-    print_executive_assessment(executive)
+    print_executive_assessment(
+        executive,
+        analytical_judgment
+    )
+    # print(cop["assessment_drivers"]) # Print the assessment drivers
+    # print(cop["analytical_judgment"])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 import sys
 from pathlib import Path
 
@@ -37,6 +38,49 @@ def format_label(text):
     """Converts snake_case to Title Case."""
     return str(text).replace("_", " ").title()
 
+def render_domain_risk_chart(domain_assessment):
+    """
+    Render a horizontal bar chart showing
+    comparative domain risk.
+    """
+
+    if not domain_assessment:
+        return
+
+    sorted_domains = sorted(
+        domain_assessment.items(),
+        key=lambda item: item[1]["score"],
+        reverse=True
+    )
+
+    labels = [
+        format_label(domain)
+        for domain, _ in sorted_domains
+    ]
+
+    scores = [
+        details["score"]
+        for _, details in sorted_domains
+    ]
+
+    fig, ax = plt.subplots(figsize=(6, 2.8))
+
+    ax.barh(labels, scores)
+
+    ax.invert_yaxis()
+
+    ax.tick_params(axis="y", labelsize=8)
+    ax.tick_params(axis="x", labelsize=8)
+
+    ax.set_xlabel("Risk Score")
+
+    ax.set_title("Comparative Domain Risk")
+
+    fig.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+
+    plt.close(fig)
+
 # ---------------------------------------------------------
 # DATA FETCHING (THE COP CLIENT)
 # ---------------------------------------------------------
@@ -50,6 +94,10 @@ cop = fetch_intelligence()
 # Unpack the Common Operational Picture
 risk_summary = cop.get("risk", {})
 executive = cop.get("executive_assessment", {})
+analytical_judgment = cop.get(
+    "analytical_judgment",
+    []
+)
 metrics = cop.get("metrics", {})
 events = cop.get("recent_events", [])
 risk_clusters = cop.get("risk_clusters", {})
@@ -59,6 +107,7 @@ pakistan_exposure = cop.get("pakistan_exposure", {})
 cascade_effects = cop.get("cascade_effects", {"first_order": [], "second_order": [], "third_order": []})
 escalation_indicators = cop.get("escalation_indicators", {"high_confidence": [], "medium_confidence": [], "monitoring": []})
 forecast = cop.get("forecast", {})
+confidence_summary = cop.get("confidence", {})
 
 # ---------------------------------------------------------
 # UI RENDERING
@@ -95,10 +144,93 @@ with metric4:
 st.write("")
 
 # The BLUF (Bottom Line Up Front)
-if executive.get("risk_statement"):
-    st.info(f"**Bottom Line Up Front (BLUF)**\n\n{executive['risk_statement']}")
+with st.container(border=True):
 
-st.write("")
+    st.subheader("Executive Briefing")
+
+    st.markdown(
+        executive.get(
+            "risk_statement",
+            "No executive assessment available."
+        )
+    )
+
+    st.write("")
+
+    brief_col1, brief_col2 = st.columns(2)
+
+    with brief_col1:
+
+        st.markdown("**Primary Driver**")
+
+        drivers = executive.get(
+            "primary_drivers",
+            []
+        )
+
+        if drivers:
+            st.write(drivers[0])
+        else:
+            st.caption("None identified.")
+
+        st.write("")
+
+        st.markdown("**Highest Exposure**")
+
+        exposures = executive.get(
+            "highest_exposures",
+            []
+        )
+
+        if exposures:
+            st.write(exposures[0])
+        else:
+            st.caption("None identified.")
+
+    with brief_col2:
+
+        st.markdown(
+            "**Priority Intelligence Requirement**"
+        )
+
+        monitoring = executive.get(
+            "priority_monitoring",
+            []
+        )
+
+        if monitoring:
+            st.write(monitoring[0])
+        else:
+            st.caption("No active PIRs.")
+
+        st.write("")
+
+        st.markdown(
+            "**Operational Assessment**"
+        )
+
+        st.write(
+            format_label(
+                risk_summary.get(
+                    "overall_risk",
+                    "UNKNOWN"
+                )
+            )
+        )
+
+        st.divider()
+
+        st.markdown("### Assessment Basis")
+
+        if analytical_judgment:
+
+            for statement in analytical_judgment:
+
+                st.markdown(f"- {statement}")
+
+        else:
+
+            st.caption("No analytical justification available.")
 
 # Top Strategic Risks Ranking (Enhanced Visual Presentation)
 st.subheader("Top Strategic Risks")
@@ -125,25 +257,101 @@ st.markdown("---")
 # =========================================================
 st.header("2. Operational Picture")
 
+st.subheader("Strategic Domain Risk Overview")
+
+render_domain_risk_chart(
+    domain_assessment
+)
+
+st.write("")
+
 op_col1, op_col2 = st.columns(2)
 
 with op_col1:
-    st.subheader("Domain Risk Assessment")
+
+    # --------------------------------------------------
+    # Domain Risk Assessment
+    # --------------------------------------------------
+    st.subheader("Domain Risk Breakdown")
+
     with st.container(border=True):
-        sorted_domains = sorted(domain_assessment.items(), key=lambda x: x[1]["score"], reverse=True)
+
+        sorted_domains = sorted(
+            domain_assessment.items(),
+            key=lambda x: x[1]["score"],
+            reverse=True
+        )
+
         for domain, details in sorted_domains:
-            st.markdown(f"**{format_label(domain)}**")
-            st.progress(min(details["score"] / 30, 1.0))
-            st.caption(f"Risk Level: {format_label(details['risk_level'])}")
+
+            st.markdown(
+                f"**{format_label(domain)}**"
+            )
+
+            progress = min(
+                details["score"] / 30,
+                1.0
+            )
+
+            st.progress(progress)
+
+            st.caption(
+                f"Score: {details['score']} | "
+                f"{format_label(details['risk_level'])}"
+            )
+
             st.write("")
 
+    # --------------------------------------------------
+    # Commodity Exposure
+    # --------------------------------------------------
     st.subheader("Commodity Exposure")
+
     with st.container(border=True):
+
         if commodity_exposure:
-            for commodity, exposure in sorted(commodity_exposure.items()):
-                st.markdown(f"**{format_label(commodity)}** &nbsp;—&nbsp; {get_status_badge(exposure)}")
+
+            for commodity, exposure in sorted(
+                commodity_exposure.items()
+            ):
+
+                left, right = st.columns([3, 1])
+
+                with left:
+                    st.markdown(
+                        f"**{format_label(commodity)}**"
+                    )
+
+                with right:
+                    st.markdown(
+                        get_status_badge(exposure)
+                    )
+
         else:
-            st.caption("No critical commodity exposures.")
+
+            st.caption(
+                "No critical commodity exposures."
+            )
+
+    # --------------------------------------------------
+    # Strategic Impact Areas
+    # --------------------------------------------------
+    st.subheader("Strategic Impact Areas")
+
+    with st.container(border=True):
+
+        areas = cop.get("impact_areas", [])
+
+        if areas:
+
+            for area in areas:
+                st.markdown(f"- {area}")
+
+        else:
+
+            st.caption(
+                "No strategic impact areas identified."
+            )
 
 with op_col2:
     st.subheader("Pakistan Infrastructure Impact")
@@ -170,36 +378,108 @@ st.markdown("---")
 # =========================================================
 st.header("3. Operational Intelligence")
 
-st.subheader("Implicated Risk Clusters")
-if risk_clusters:
-    for cluster_name, details in risk_clusters.items():
-        with st.container(border=True):
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                st.markdown(f"### {cluster_name}")
-                st.write(f"Combined Score: {details['score']}")
-            with col2:
-                st.write("")
-                st.markdown(get_status_badge(details.get("risk_level", "HIGH")))
+st.subheader("Strategic Risk Clusters")
 
-            st.write("**Associated Events:**")
+if risk_clusters:
+
+    sorted_clusters = sorted(
+        risk_clusters.items(),
+        key=lambda item: item[1]["score"],
+        reverse=True
+    )
+
+    for cluster_name, details in sorted_clusters:
+
+        with st.container(border=True):
+
+            top_left, top_right = st.columns([4, 1])
+
+            with top_left:
+                st.markdown(f"### {cluster_name}")
+
+            with top_right:
+                st.markdown(
+                    get_status_badge(
+                        details["risk_level"]
+                    )
+                )
+
+            info1, info2 = st.columns(2)
+
+            with info1:
+                st.metric(
+                    "Combined Score",
+                    details["score"]
+                )
+
+            with info2:
+                st.metric(
+                    "Linked Events",
+                    len(details["events"])
+                )
+
+            st.markdown("**Associated Events**")
+
             for event in details["events"]:
-                st.markdown(f"- {event}")
+                st.markdown(f"• {event}")
+
 else:
-    st.caption("No clustered threats mapped.")
+
+    st.info(
+        "No correlated strategic risk clusters detected."
+    )
 
 st.write("")
-st.subheader("Live Event Telemetry")
+st.subheader("Live Intelligence Feed")
+
 if events:
-    df_events = pd.DataFrame(events)
-    df_events = df_events[["headline", "severity", "source", "relevance"]]
-    df_events["severity"] = df_events["severity"].apply(format_label)
-    df_events["source"] = df_events["source"].apply(format_label)
-    df_events.columns = ["Event Headline", "Severity", "Intelligence Source", "Relevance"]
-    
-    st.dataframe(df_events, use_container_width=True, hide_index=True)
+
+    sorted_events = sorted(
+        events,
+        key=lambda event: event["relevance"],
+        reverse=True
+    )
+
+    for idx, event in enumerate(sorted_events, start=1):
+
+        with st.container(border=True):
+
+            left, right = st.columns([5,1])
+
+            with left:
+
+                st.markdown(
+                    f"**{idx}. {event['headline']}**"
+                )
+
+                st.caption(
+                    f"Source: {event['source']}"
+                )
+
+            with right:
+
+                st.markdown(
+                    get_status_badge(
+                        event["severity"]
+                    )
+                )
+
+            st.progress(
+                min(
+                    event["relevance"] / 10,
+                    1.0
+                )
+            )
+
+            st.caption(
+                f"Relevance Score: {event['relevance']}"
+            )
+
 else:
-    st.info("No active intelligence events in the current timeframe.")
+
+    st.info(
+        "No active intelligence signals detected."
+    )
 
 st.markdown("---")
 
@@ -249,11 +529,96 @@ if forecast:
 else:
     st.caption("No predictive models currently mapped to live events.")
 
+st.write("")
+
+st.subheader("Source Confidence Assessment")
+
+if confidence_summary:
+
+    for event_code, details in confidence_summary.items():
+
+        with st.container(border=True):
+
+            left, right = st.columns([4,1])
+
+            with left:
+
+                st.markdown(
+                    f"**{event_code}**"
+                )
+
+                st.caption(
+                    ", ".join(details["sources"])
+                )
+
+            with right:
+
+                st.markdown(
+                    get_status_badge(
+                        details["confidence"]
+                    )
+                )
+
+            st.progress(
+                min(
+                    details["composite_score"] / 20,
+                    1.0
+                )
+            )
+
+            stat1, stat2, stat3 = st.columns(3)
+
+            stat1.metric(
+                "Sources",
+                details["confirmation_count"]
+            )
+
+            stat2.metric(
+                "Reliability",
+                details["reliability_score"]
+            )
+
+            stat3.metric(
+                "Composite",
+                details["composite_score"]
+            )
+
+else:
+
+    st.caption(
+        "No confidence assessment available."
+    )
+
 st.divider()
 
 # Footer
-footer_left, footer_right = st.columns([3, 1])
-with footer_left:
-    st.caption("Pakistan Geopolitical Intelligence Platform • Version 1.0")
-with footer_right:
-    st.caption(f"Generated: {cop['generated_at']}")
+st.divider()
+
+st.subheader("System Status")
+
+status1, status2, status3, status4 = st.columns(4)
+
+status1.metric(
+    "Platform",
+    "Version 1.0"
+)
+
+status2.metric(
+    "Events Cached",
+    metrics.get("total_events", 0)
+)
+
+status3.metric(
+    "Database",
+    "ONLINE"
+)
+
+status4.metric(
+    "Feed Status",
+    "ACTIVE"
+)
+
+st.caption(
+    f"Common Operational Picture generated at "
+    f"{cop['generated_at']}"
+)
