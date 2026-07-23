@@ -24,11 +24,11 @@ class EventClassifier:
             "contextual": 1
         }
 
+        MINIMUM_RELEVANCE_SCORE = 5
+
         for event in self.taxonomy["events"]:
 
             score = 0
-
-            MINIMUM_RELEVANCE_SCORE = 5
 
             current_matches = []
 

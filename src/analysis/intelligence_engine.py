@@ -331,13 +331,6 @@ class IntelligenceEngine:
             }
 
         return summary
-
-    def get_risk_summary(self):
-
-        """
-        Build the national risk assessment summary.
-        """
-        return {}
     
     def _calculate_risk_level(self, score):
         """
@@ -812,12 +805,4 @@ if __name__ == "__main__":
     # print(cop)
     cop = engine.build_common_operational_picture()
 
-    print(cop["risk"])
-    print(cop["commodity_exposure"])
-    print(cop["pakistan_exposure"])
-    print(cop["forecast"])
-    print(cop["domain_scores"])
-    print(cop["domain_assessment"])
-    print(cop["cascade_effects"])
-    print(cop["escalation_indicators"])
-    print(cop["impact_areas"])
+    print("Common Operational Picture generated successfully.")

@@ -15,15 +15,6 @@ class EventStore:
 
         self.create_articles_table()
 
-    def count_events(self):
-
-        self.cursor.execute("""
-        SELECT COUNT(*)
-        FROM events
-        """)
-
-        return self.cursor.fetchone()[0]
-
     def create_events_table(self):
 
         self.cursor.execute("""
@@ -121,10 +112,6 @@ class EventStore:
 
         return self.cursor.fetchone()[0]
     
-        print(
-            f"Database Events: "
-            f"{store.count_events()}"
-        )
 
     def save_event(self, headline, source, classification):
 
