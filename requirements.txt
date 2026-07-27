@@ -1,7 +1,15 @@
-yfinance==0.2.54
+# Core
 pandas==2.2.3
+pyyaml==6.0.2
 requests==2.32.3
 beautifulsoup4==4.12.3
-python-dotenv==1.0.1
-pyyaml==6.0.2
+
+# Data Sources
+yfinance==0.2.54
+
+# Dashboard
 streamlit==1.58.0
+matplotlib==3.10.3
+
+# Configuration
+python-dotenv==1.0.1

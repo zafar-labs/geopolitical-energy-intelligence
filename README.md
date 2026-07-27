@@ -1,166 +1,216 @@
-# Geopolitical Energy Intelligence
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Status](https://img.shields.io/badge/Status-v1.0%20Stable-success)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## Overview
 
-Geopolitical Energy Intelligence is an ontology-driven intelligence analysis platform designed to identify, classify, store, and assess geopolitical events that may affect energy security, commodity markets, and economic stability.
+# 🛰️ Pakistan Geopolitical Intelligence Platform
 
-The project focuses on transforming raw geopolitical events into structured intelligence products by combining event classification, crisis correlation, risk assessment, commodity exposure analysis, and escalation monitoring.
+A modular, ontology-driven strategic intelligence platform built to evaluate geopolitical events, energy security, supply chain exposure, and cascading strategic risks affecting Pakistan.
+---
 
-The current implementation is optimized for analyzing energy-related disruptions and their implications for Pakistan.
+## 🎯 Executive Overview
+
+Most geopolitical tracking tools simply aggregate RSS feeds and display disconnected news headlines. This platform transforms unstructured event signals into **structured, explainable, and actionable intelligence products**.
+
+By decoupling intelligence generation from presentation, the system builds a single **Common Operational Picture (COP)** that powers both a high-command Streamlit dashboard and a command-line strategic risk briefing.
+
+Unlike traditional dashboards that independently calculate analytical outputs, this platform centralizes all intelligence generation inside a Common Operational Picture (COP). Every presentation layer consumes the same intelligence object, ensuring consistency, explainability, and maintainability across the system.
+
+```
+Intelligence Sources
+        │
+        ▼
+RSS Ingestion
+        │
+        ▼
+Ontology Classification
+        │
+        ▼
+SQLite Repository
+        │
+        ▼
+Intelligence Engine
+        │
+        ▼
+Common Operational Picture
+        │
+   ┌────┴─────┐
+   ▼          ▼
+Dashboard   Risk Report
+```
+---
+## 📸 Platform Preview
+
+The platform generates a unified **Common Operational Picture (COP)** through both an interactive Streamlit dashboard and a command-line executive intelligence report.
+
+### Executive Summary
+
+Provides an immediate strategic assessment including the Bottom Line Up Front (BLUF), overall operational risk, primary threat drivers, and priority intelligence requirements.
+
+![Executive Summary](docs/images/dashboard-executive-summary.png)
 
 ---
 
-## Key Capabilities
+### Operational Picture
 
-### Event Detection and Classification
+Visualizes comparative domain risk, commodity exposure, and Pakistan-specific infrastructure impacts derived from the Common Operational Picture.
 
-* Ontology-driven event classification
-* Keyword-based intelligence matching
-* Configurable event taxonomy
-* Transparent and explainable decision logic
-
-### Intelligence Repository
-
-* Persistent event storage using SQLite
-* Historical event retrieval
-* High-relevance event filtering
-* Duplicate event prevention
-
-### Risk Assessment
-
-* Severity-based risk analysis
-* Composite strategic risk scoring
-* Domain-level risk assessment
-* Multi-factor risk aggregation
-
-### Crisis Correlation
-
-* Identification of related geopolitical events
-* Crisis clustering and situation assessment
-* Correlated risk analysis
-
-### Commodity Exposure Intelligence
-
-* Commodity dependency mapping
-* Exposure assessment by commodity
-* Exposure prioritization
-* Strategic vulnerability identification
-
-### Pakistan Exposure Assessment
-
-* Strategic dependency identification
-* Immediate effect assessment
-* Delayed effect assessment
-* National-level vulnerability analysis
-
-### Cascading Risk Assessment
-
-* First-order effects
-* Second-order effects
-* Third-order effects
-* Risk propagation analysis
-
-### Escalation Monitoring
-
-* High-confidence escalation indicators
-* Medium-confidence escalation indicators
-* Monitoring indicators
-* Early warning support
+![Operational Picture](docs/images/dashboard-domain-risk-breakdown.png)
 
 ---
 
-## Current Analytical Workflow
+### Operational Intelligence
+
+Displays correlated strategic risk clusters together with the live intelligence feed and relevance scoring of detected geopolitical events.
+
+![Operational Intelligence](docs/images/dashboard-operational-intelligence.png)
+
+
+## Strategic Outlook
+
+Provides cascading effects analysis, escalation indicators, priority intelligence requirements (PIRs), and forward-looking strategic assessment.
+
+![Strategic Outlook](docs/images/dashboard-strategic-outlook.png)
+
+---
+## 🔑 Key Engineering Achievements
+
+* **Unified Common Operational Picture (COP):** Single-source-of-truth pipeline that calculates multi-domain risk, exposure matrices, and scenarios in a unified payload.
+* **Pure Client-Presenter Architecture:** Presentation components (web UI and CLI tools) act as pure clients—they consume the pre-calculated COP without duplicating risk calculations or business logic.
+* **Ontology-Driven Classification:** Powered by a structured YAML taxonomy defining event triggers, impact domains, cascade orders, and escalation indicators.
+* **Correlated Threat Clustering:** Aggregates isolated tactical signals into systemic, high-level crisis clusters with combined threat scoring.
+* **Forward-Looking Scenario Forecasting:** Maps events to triple-scenario outcomes (*Most Likely*, *Severe Case*, *Best Case*) with dynamic confidence evaluation.
+* **National Exposure Profiling:** Tracks commodity vulnerabilities (*LNG, Crude Oil, Power Generation*) and national infrastructure impacts specific to Pakistan.
+
+
+---
+## 🛠️ Intelligence Products
+
+| Module | Technical Function | Analytical Output |
+| --- | --- | --- |
+| **Executive Analytic Judgment** | Synthesis of top signals | Bottom Line Up Front (BLUF) risk statement |
+| **Composite Risk Engine** | Highest Score + Event Count + Domain Multipliers | Overall System Risk Level (*Critical, High, Medium, Low*) |
+| **Correlated Risk Clusters** | Cluster aggregation algorithms | Systemic threat grouping (e.g., *Gulf Energy Supply Shock*) |
+| **Commodity Exposure Tracking** | Rank-order escalation matrix | Vulnerability tracking across critical fuels |
+| **Cascading Risk Modeling** | Multi-order dependency mapping | 1st-Order (Immediate), 2nd-Order (Delayed), 3rd-Order (Systemic) |
+| **Escalation Indicators (PIRs)** | Signal pattern matching | High, Medium, and Baseline Priority Intelligence Requirements |
+| **Source Confidence Matrix** | Multi-source confirmation & reliability scoring | Composite verification weighting (*Very High* to *Low*) |
+
+---
+
+## 📁 Repository Directory Structure
 
 ```text
-News Event
-      ↓
-Ontology Classification
-      ↓
-Event Storage
-      ↓
-Risk Assessment
-      ↓
-Crisis Clustering
-      ↓
-Commodity Exposure Analysis
-      ↓
-Pakistan Exposure Assessment
-      ↓
-Cascading Risk Assessment
-      ↓
-Escalation Monitoring
+geopolitical-energy-intelligence/
+├── config/
+│   └── event_taxonomy.yaml         # Geopolitical event ontology & rule definitions
+├── src/
+│   ├── analysis/
+│   │   └── intelligence_engine.py  # Core processing engine & COP builder
+│   ├── dashboard/
+│   │   └── app.py                  # Streamlit Strategic Operations Center (UI)
+│   ├── reporting/
+│   │   └── risk_report.py          # CLI executive intelligence presenter
+│   └── storage/
+│       └── event_store.py          # SQLite persistence & telemetry repository
+├── requirements.txt                # System dependencies
+└── README.md                       # Project documentation
+
 ```
 
 ---
 
-## Technology Stack
+## ⚡ Quickstart & Installation
 
-* Python
-* SQLite
-* YAML Ontology Framework
+### Prerequisites
+
+* Python 3.10+ installed
 * Git
-* GitHub
+
+### 1. Clone & Set Up Environment
+
+```bash
+# Clone the repository
+git clone https://github.com/zafar-labs/geopolitical-energy-intelligence.git
+cd geopolitical-energy-intelligence
+
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+# Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# macOS/Linux:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+```
+
+### 2. Run the Executive CLI Risk Report
+
+Generate a formal command-line intelligence brief directly from the engine:
+
+```bash
+python src/reporting/risk_report.py
+
+```
+
+### 3. Launch the Interactive Operations Dashboard
+
+Launch the Streamlit Operations Center:
+
+```bash
+streamlit run src/dashboard/app.py
+
+```
+
+Open your browser at `http://localhost:8501` to view the active platform.
 
 ---
 
-## Design Philosophy
+## 📐 Engineering Principles
 
-The platform follows an ontology-driven architecture.
+### 1. Zero Technical Debt Refactoring
 
-Rather than relying on machine learning models, intelligence logic is stored within a structured YAML ontology that defines:
+Earlier versions of the codebase calculated threat thresholds independently in both the presentation and analytical modules. In Version 1.0, all business logic was consolidated inside `IntelligenceEngine.build_common_operational_picture()`. Both the Streamlit dashboard and CLI report now consume the COP payload, guaranteeing 100% data consistency across all interfaces.
 
-* Event categories
-* Detection rules
-* Impact domains
-* Commodity exposures
-* Cascading effects
-* Escalation indicators
-* Crisis clusters
+### 2. Defensive Programming & Fault Tolerance
 
-This approach prioritizes:
+Methods processing nested dictionary payloads (such as YAML ontology definitions or dynamic event metadata) employ safe lookup mechanisms (`.get()`) with fallback states. This ensures the dashboard and reporting clients remain resilient even when processing empty datasets or network drops.
 
-* Transparency
-* Explainability
-* Analyst control
-* Ease of modification
-* Rapid prototyping
+### 3. Extensible Knowledge Graph Architecture
+
+The system logic is decoupled from hardcoded python conditionals. New threat vectors, impact domains, or escalation indicators can be introduced simply by updating `config/event_taxonomy.yaml` without altering a single line of backend processing code.
+
 
 ---
 
-## Current Status
+## 🛣️ Version 2 Vision
 
-Development Status: Active
-
-Current Capability Level:
-
-* Event Classification
-* Risk Assessment
-* Crisis Correlation
-* Commodity Exposure Intelligence
-* Cascading Risk Analysis
-* Escalation Monitoring
-
-The platform currently generates structured intelligence reports from detected geopolitical events and assesses their potential implications for Pakistan's energy security and economic stability.
+* [ ] **Automated Telemetry Ingestion:** Integration of live RSS/API news scrapers directly feeding the SQLite `EventStore`.
+* [ ] **Geospatial Mapping:** Folium/Mapbox integration for visual tracking of maritime chokepoints (*Strait of Hormuz, Bab-el-Mandeb*).
+* [ ] **LLM-Assisted Intelligence Briefing:** Automated synthesis of multi-source intelligence reports using local LLMs (Ollama / vLLM).
+* [ ] **Multi-Regional Expansion:** Extending the ontology model to assess energy security risks for neighboring South Asian and MENA economies.
 
 ---
 
-## Roadmap
+## 👤 Author
 
-Planned Enhancements:
+**J. Zafar**
 
-* Scenario Forecasting
-* Escalation Probability Assessment
-* Commodity Risk Scoring
-* Multi-Crisis Correlation
-* Advanced Intelligence Dashboards
-* External Data Integration
-* PostgreSQL Migration
-* API Layer
+Software Engineering • Intelligence Systems • Geopolitical Risk Analytics
+
+GitHub: [zafar-labs](https://github.com/zafar-labs)
 
 ---
 
-## Disclaimer
+## 📜 License
 
-This project is a research and educational prototype intended for intelligence analysis experimentation, geopolitical risk assessment, and software engineering learning purposes.
+This project is licensed under the MIT License — see the `LICENSE` file for details.
 
-Outputs generated by the platform should not be used as the sole basis for operational, financial, policy, or national security decisions.
+> *"Good software processes data. Great software produces understanding."*
+
+---
+

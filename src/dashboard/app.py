@@ -21,6 +21,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+
 def get_status_badge(level):
     """Generates visual color-coded badges for risk levels."""
     level_clean = str(level).strip().upper().replace("_", " ")
@@ -114,7 +115,9 @@ confidence_summary = cop.get("confidence", {})
 # ---------------------------------------------------------
 
 st.title("🛰️ Pakistan Geopolitical Intelligence Platform")
-st.caption("Strategic Energy Security | Common Operational Picture (COP)")
+st.caption(
+    "Strategic Intelligence Platform | Common Operational Picture (COP)"
+)
 
 header_left, header_center, header_right = st.columns([2, 1, 1])
 with header_left:
